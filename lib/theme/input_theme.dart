@@ -4,7 +4,7 @@ import 'package:pyc_app/constants/constants.dart';
 InputDecorationTheme inputDecorationTheme = const InputDecorationTheme(
   labelStyle: TextStyle(
     fontSize: 18.0,
-    color: kSecondaryColor,
+    color: kFormLabelColor,
     height: 0.5,
   ),
   hintStyle: TextStyle(

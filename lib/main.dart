@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:pyc_app/constants/constants.dart';
 import 'package:pyc_app/routes/routes.dart';
 import 'package:pyc_app/screen/splash/splash_screen.dart';
 import 'package:pyc_app/theme/input_theme.dart';
+// import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'passion',
       theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: kBackgroundColor,
         primaryColor: kPrimaryColor,
         inputDecorationTheme: inputDecorationTheme,
         appBarTheme: const AppBarTheme(
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: const Text('foobar'),
+      home: const Text('foo'),
       initialRoute: SplashScreen.routeName,
       getPages: routes,
     );

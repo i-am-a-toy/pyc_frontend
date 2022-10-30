@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:pyc_app/constants/constants.dart';
 
-class DefaultInputField extends StatelessWidget {
+class DefaultSuffixInputField extends StatelessWidget {
   final String label;
   final FormFieldSetter<String> onSaved;
   final FormFieldValidator<String> validator;
+  final ValueChanged<String> onChange;
+  final bool isValid;
   final String? hint;
-  final TextInputType? keyboardType;
   final String? init;
+  final TextInputType? keyboardType;
 
-  const DefaultInputField({
+  const DefaultSuffixInputField({
     Key? key,
     required this.label,
     required this.onSaved,
     required this.validator,
+    required this.isValid,
+    required this.onChange,
     this.hint,
     this.keyboardType,
     this.init,
@@ -21,9 +25,11 @@ class DefaultInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Icon icon = const Icon(Icons.check_circle_rounded);
     return TextFormField(
       textAlign: TextAlign.start,
       keyboardType: keyboardType ?? TextInputType.text,
+      onChanged: onChange,
       style: const TextStyle(
         color: kTextBlackColor,
         fontSize: 20.0,
@@ -34,6 +40,13 @@ class DefaultInputField extends StatelessWidget {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         isDense: true,
         hintText: hint,
+        suffixIcon: isValid
+            ? IconButton(
+                icon: icon,
+                color: kPrimaryColor,
+                onPressed: () {},
+              )
+            : null,
       ),
       onSaved: onSaved,
       validator: validator,

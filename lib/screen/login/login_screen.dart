@@ -1,12 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:pyc_app/components/button/default_buttons.dart';
-import 'package:pyc_app/components/form/default_input_field.dart';
+import 'package:get/get.dart';
+import 'package:pyc_app/components/button/default_state_button.dart';
+import 'package:pyc_app/components/checkbox/default_checkbox_button.dart';
 import 'package:pyc_app/components/form/default_password_field.dart';
+import 'package:pyc_app/components/form/default_suffix_input_field.dart';
 import 'package:pyc_app/constants/constants.dart';
-import 'package:pyc_app/utils/validator/form_validator.dart';
+import 'package:pyc_app/controllers/login/login_controller.dart';
+import 'package:pyc_app/utils/validator/validator.dart';
 
 class LoginScreen extends StatelessWidget {
   static String routeName = '/login';
@@ -60,42 +61,65 @@ class LoginScreen extends StatelessWidget {
                     key: formKey,
                     child: Column(
                       children: [
-                        DefaultInputField(
-                          label: "Id",
-                          onSaved: (val) => id = val!.trim(),
-                          validator: requiredFormValidator,
+                        GetBuilder<LoginController>(
+                          builder: (controller) => DefaultSuffixInputField(
+                            label: 'ID',
+                            hint: '아이디를 입력해주세요.',
+                            onChange: controller.validInputId,
+                            validator: requiredStringValidator,
+                            onSaved: (val) => id = val!.trim(),
+                            isValid: controller.isValidId,
+                          ),
                         ),
-                        kHeightSizeBox,
-                        DefaultPasswordField(
-                          label: "Password",
-                          onSaved: (val) => password = val!.trim(),
-                          validator: requiredFormValidator,
+                        kDoubleHeightSizeBox,
+                        GetBuilder<LoginController>(
+                          builder: (controller) => DefaultPasswordField(
+                            label: 'Password',
+                            hint: '비밀번호를 입력해주세요.',
+                            onChage: controller.validInputPassword,
+                            validator: requiredStringValidator,
+                            onSaved: (val) => id = val!.trim(),
+                          ),
                         ),
-                        kHeightSizeBox,
-                        DefaultButton(
-                          onPress: () {
-                            bool result = formCurrentStateValidate(formKey);
-                            if (!result) return;
-                            formKey.currentState!.save();
-                            //TODO: 로그인처리 후 Home화면
-                          },
-                          title: "Login",
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: TextButton(
-                            onPressed: () {
-                              log("비밀번호 찾는 로직");
-                            },
-                            child: const Text(
-                              'Did you forget password?',
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                color: kSecondaryColor,
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w700,
+                        kHalfHeightSizeBox,
+                        SizedBox(
+                          width: size.width,
+                          height: 25.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              GetBuilder<LoginController>(
+                                builder: (controller) => SizedBox(
+                                  height: kDefaultValue,
+                                  width: kDefaultValue,
+                                  child: DefaultCheckBox(
+                                    initValue: controller.isSavedId,
+                                    onChanged: controller.toggleSavedId,
+                                  ),
+                                ),
                               ),
-                            ),
+                              kHalfWidthSizedBox,
+                              const Text(
+                                '아이디 저장',
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w300,
+                                  color: kHintTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        kHeightSizeBox,
+                        GetBuilder<LoginController>(
+                          builder: (controller) => DefaultStatusButton(
+                            onPress: () {
+                              // bool result = formCurrentStateValidate(formKey);
+                              // if (!result) return;
+                              // formKey.currentState!.save();
+                            },
+                            title: '로그인',
+                            status: controller.isValid,
                           ),
                         ),
                       ],

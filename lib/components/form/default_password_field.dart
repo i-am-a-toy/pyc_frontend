@@ -5,12 +5,16 @@ class DefaultPasswordField extends StatefulWidget {
   final String label;
   final FormFieldSetter<String> onSaved;
   final FormFieldValidator<String> validator;
+  final String? hint;
+  final ValueChanged<String>? onChage;
 
   const DefaultPasswordField({
     Key? key,
     required this.label,
     required this.onSaved,
     required this.validator,
+    this.hint,
+    this.onChage,
   }) : super(key: key);
 
   @override
@@ -27,13 +31,10 @@ class _DefaultPasswordFieldState extends State<DefaultPasswordField> {
       obscureText: obscureText,
       textAlign: TextAlign.start,
       keyboardType: TextInputType.visiblePassword,
-      style: const TextStyle(
-        color: kTextBlackColor,
-        fontSize: 17.0,
-        fontWeight: FontWeight.w300,
-      ),
+      onChanged: widget.onChage,
       decoration: InputDecoration(
         labelText: widget.label,
+        hintText: widget.hint,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         isDense: true,
         suffixIcon: IconButton(

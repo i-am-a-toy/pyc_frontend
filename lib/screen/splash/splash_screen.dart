@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyc_app/constants/constants.dart';
-import 'package:pyc_app/screen/login/login_screen.dart';
+import 'package:pyc_app/screen/login/new_login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   static String routeName = '/splash';
@@ -13,7 +13,7 @@ class SplashScreen extends StatelessWidget {
 
     //3초 뒤에 로그인 페이지로 이동시키키
     Future.delayed(const Duration(seconds: 3), () {
-      Get.offAllNamed(LoginScreen.routeName);
+      Get.offAllNamed(NewLoginScreen.routeName);
     });
 
     return Scaffold(

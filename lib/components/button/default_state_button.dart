@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:pyc_app/constants/constants.dart';
 
-class DefaultButton extends StatelessWidget {
+class DefaultStatusButton extends StatelessWidget {
   final VoidCallback onPress;
   final String title;
   final double radius;
+  final bool status;
 
-  const DefaultButton({
+  const DefaultStatusButton({
     Key? key,
     required this.onPress,
     required this.title,
+    required this.status,
     this.radius = kDefaultValue / 2,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      // null이면 자동으로 비활성화 된다. 상태 값에 따라 null과 onpress를 뿌려주자
-      onPressed: onPress,
+      onPressed: status ? onPress : null,
       style: ElevatedButton.styleFrom(
         backgroundColor: kPrimaryColor,
         minimumSize: const Size(double.infinity, kDefaultValue * 2),
