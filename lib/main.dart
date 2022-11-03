@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pyc_app/constants/constants.dart';
-import 'package:pyc_app/routes/routes.dart';
-import 'package:pyc_app/screen/splash/splash_screen.dart';
-import 'package:pyc_app/theme/input_theme.dart';
-// import 'package:get/get.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/route_manager.dart';
+import 'package:pyc/common/constants/constants.dart';
+import 'package:pyc/routes/routes.dart';
+import 'package:pyc/screens/splash/splash_screen.dart';
+import 'package:pyc/common/theme/input_theme.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: '.env');
   runApp(const MyApp());
 }
 
@@ -17,19 +18,31 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      title: 'PYC',
       debugShowCheckedModeBanner: false,
-      title: 'passion',
-      theme: ThemeData.light().copyWith(
-        primaryColor: kPrimaryColor,
+      theme: ThemeData(
         inputDecorationTheme: inputDecorationTheme,
-        appBarTheme: const AppBarTheme(
-          color: kPrimaryColor,
-          elevation: 0,
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          selectedItemColor: kPrimaryColor,
+          unselectedItemColor: Colors.grey,
+          selectedLabelStyle: TextStyle(
+            color: kPrimaryColor,
+            fontSize: 10.0,
+            fontWeight: FontWeight.bold,
+          ),
+          unselectedLabelStyle: TextStyle(
+            color: kHintTextColor,
+            fontSize: 10.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      home: const Text('foo'),
-      initialRoute: SplashScreen.routeName,
+      home: const Text('Hello World'),
       getPages: routes,
+      initialRoute: SplashScreen.routeName,
+      // home: const HomeScreen(),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pyc_app/constants/constants.dart';
+import 'package:pyc/common/constants/constants.dart';
 
 class DefaultButton extends StatelessWidget {
   final VoidCallback onPress;

@@ -1,4 +1,4 @@
-name: pyc_app
+name: pyc
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -36,7 +36,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   get: ^4.6.5
-  flutter_svg: ^1.1.5
+  dio: ^4.0.6
+  shared_preferences: ^2.0.15
+  flutter_secure_storage: ^6.0.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +66,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

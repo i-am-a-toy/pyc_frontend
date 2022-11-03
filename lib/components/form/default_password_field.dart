@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pyc_app/constants/constants.dart';
+import 'package:pyc/common/constants/constants.dart';
 
 class DefaultPasswordField extends StatefulWidget {
   final String label;
@@ -32,6 +32,12 @@ class _DefaultPasswordFieldState extends State<DefaultPasswordField> {
       textAlign: TextAlign.start,
       keyboardType: TextInputType.visiblePassword,
       onChanged: widget.onChage,
+      cursorColor: kPrimaryColor,
+      style: const TextStyle(
+        color: kTextBlackColor,
+        fontSize: 16.0,
+        fontWeight: FontWeight.w300,
+      ),
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,

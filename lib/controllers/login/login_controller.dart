@@ -1,38 +1,39 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
-  final RegExp _idReg = RegExp(r"^[ㄱ-ㅎ가-힣A-Z]{2,10}$");
-  final RegExp _passwordInputReg = RegExp(r"^[ㄱ-ㅎ가-힣ㅏ-ㅣA-Za-z@$!#?&]{5,}$");
-
-  bool _isValidId = false;
-  bool _isEnterdPassword = false;
-  bool _isValid = false;
+  String _id = '';
+  bool _isLoading = false;
   bool _isSavedId = false;
 
-  bool get isValidId => _isValidId;
-  bool get isEnterdPassword => _isEnterdPassword;
-  bool get isValid => _isValid;
+  @override
+  @mustCallSuper
+  void onInit() async {
+    super.onInit();
+    String? id = await getId();
+    if (id != null && id.isNotEmpty) _id = id;
+    _isLoading = false;
+    update();
+  }
+
+  bool get isLoading => _isLoading;
   bool get isSavedId => _isSavedId;
+  String get id => _id;
 
-  void validInputId(String input) {
-    _isValidId = _idReg.hasMatch(input);
-    _toggleIsValid();
-    update();
-  }
-
-  void validInputPassword(String input) {
-    _isEnterdPassword = _passwordInputReg.hasMatch(input);
-    _toggleIsValid();
-    update();
-  }
-
-  void toggleSavedId(bool? value) {
+  void toggleSavedId() {
     _isSavedId = !_isSavedId;
     update();
   }
 
-  void _toggleIsValid() {
-    _isValid = _isValidId && isEnterdPassword;
-    update();
+  Future<String?> getId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? selected = prefs.getString('id');
+    return selected;
+  }
+
+  Future<void> setId(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('id', id);
   }
 }

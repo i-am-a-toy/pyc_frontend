@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pyc_app/constants/constants.dart';
+import 'package:pyc/common/constants/constants.dart';
 
 class DefaultInputField extends StatelessWidget {
   final String label;
@@ -24,9 +24,10 @@ class DefaultInputField extends StatelessWidget {
     return TextFormField(
       textAlign: TextAlign.start,
       keyboardType: keyboardType ?? TextInputType.text,
+      cursorColor: kPrimaryColor,
       style: const TextStyle(
         color: kTextBlackColor,
-        fontSize: 20.0,
+        fontSize: 16.0,
         fontWeight: FontWeight.w300,
       ),
       decoration: InputDecoration(

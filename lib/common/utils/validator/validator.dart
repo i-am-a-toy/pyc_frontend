@@ -5,7 +5,6 @@ bool defaultFormValidator(GlobalKey<FormState> formKey) {
 }
 
 String? requiredStringValidator(String? val) {
-  print(val);
   if (val == null || val.trim().isEmpty) {
     return '필수 입력입니다.';
   }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pyc_app/constants/constants.dart';
+import 'package:pyc/common/constants/constants.dart';
 
 InputDecorationTheme inputDecorationTheme = const InputDecorationTheme(
   labelStyle: TextStyle(
-    fontSize: 18.0,
+    fontSize: 16.0,
     color: kFormLabelColor,
     height: 0.5,
   ),

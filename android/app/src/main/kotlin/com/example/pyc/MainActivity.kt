@@ -1,4 +1,4 @@
-package com.example.pyc_app
+package com.example.pyc
 
 import io.flutter.embedding.android.FlutterActivity
 
