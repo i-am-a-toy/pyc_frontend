@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pyc/controllers/home/home_controller.dart';
 import 'package:pyc/controllers/login/login_controller.dart';
 import 'package:pyc/screens/home/home_screen.dart';
 import 'package:pyc/screens/login/login_screen.dart';
@@ -15,5 +16,10 @@ List<GetPage> routes = [
       },
     ),
   ),
-  GetPage(name: HomeScreen.routeName, page: () => const HomeScreen()),
+  GetPage(
+      name: HomeScreen.routeName,
+      page: () => const HomeScreen(),
+      binding: BindingsBuilder(() {
+        Get.put(HomeController());
+      })),
 ];
