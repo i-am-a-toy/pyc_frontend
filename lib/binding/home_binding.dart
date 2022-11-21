@@ -7,11 +7,12 @@ import 'package:pyc/data/repository/user_repository.dart';
 class HomeBinding extends Bindings {
   @override
   void dependencies() {
-    Get.put<FetchMeController>(
-      FetchMeController(
-        repo: UserRepository(userProvider: UserProvider()),
-      ),
-    );
+    //service
+    Get.put<UserRepository>(UserRepository(userProvider: UserProvider()));
+
+    //controller
+    final userRepository = Get.find<UserRepository>();
+    Get.put<FetchMeController>(FetchMeController(repo: userRepository));
     Get.put(HomeController());
   }
 }
