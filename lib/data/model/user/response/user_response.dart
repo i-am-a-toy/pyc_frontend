@@ -1,20 +1,18 @@
-import 'dart:ffi';
-
 class UserResponse {
-  final Int id;
-  final Int churchId;
-  final Int? cellId;
-  final String name;
-  final String image;
-  final Int age;
-  final String role;
-  final String rank;
-  final String gender;
-  final String zipCode;
-  final String address;
-  final String birth;
-  final String contact;
-  final Bool isLongAbsenced;
+  int id;
+  int churchId;
+  int? cellId;
+  String name;
+  String image;
+  int age;
+  String role;
+  String rank;
+  String gender;
+  String zipCode;
+  String address;
+  String birth;
+  String contact;
+  bool isLongAbsenced;
 
   UserResponse({
     required this.id,

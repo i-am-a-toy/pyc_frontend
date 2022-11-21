@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:pyc/data/model/auth/response/token_response.dart';
 import 'package:pyc/screens/login/login_screen.dart';
 
-Future<Dio> getDioClient() async {
+Future<Dio> getAuthApiClient() async {
   final dio = Dio(
     BaseOptions(
       baseUrl: dotenv.get('BASE_URL', fallback: 'http://localhost:3000'),

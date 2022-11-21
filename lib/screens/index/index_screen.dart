@@ -1,7 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:pyc/common/constants/constants.dart';
+import 'package:pyc/components/loading/loading_overlay.dart';
+import 'package:pyc/controllers/user/fetch_me_controller.dart';
 import 'package:pyc/screens/index/components/index_appbar.dart';
 import 'package:pyc/screens/index/components/index_attendance.dart';
 import 'package:pyc/screens/index/components/index_content_card.dart';
@@ -20,9 +23,14 @@ class IndexScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: getIndexAppbar(),
-      drawer: IndexDrawer(
-        size: size,
-        name: '우길',
+      drawer: GetBuilder<FetchMeController>(
+        builder: (controller) => LoadingOverlay(
+          isLoading: controller.isLoading,
+          child: IndexDrawer(
+            size: size,
+            name: controller.name,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
@@ -31,12 +39,15 @@ class IndexScreen extends StatelessWidget {
         child: Column(
           children: [
             // 유저 프로필
-            const IndexUserProfile(
-              userRole: '관리자',
-              name: '이우길',
-              //// example Data : https://s.gravatar.com/avatar/da0e4dd62f6939f9800cfce180b02bf4?d=robohash
-              userProfile:
-                  'https://s.gravatar.com/avatar/da0e4dd62f6939f9800cfce180b02bf4?d=robohash',
+            GetBuilder<FetchMeController>(
+              builder: (controller) => LoadingOverlay(
+                isLoading: controller.isLoading,
+                child: IndexUserProfile(
+                  userRole: controller.role,
+                  name: controller.name,
+                  userProfile: controller.image,
+                ),
+              ),
             ),
             kHeightSizeBox,
             //검색

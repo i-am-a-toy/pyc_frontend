@@ -10,6 +10,7 @@ class UserRepository extends GetxService {
   Future<UserResponse> fetchMe() async {
     final result = await userProvider.fetchMe();
     UserResponse response = UserResponse.fromJson(result.data);
+    print(response.toString());
     return response;
   }
 }
