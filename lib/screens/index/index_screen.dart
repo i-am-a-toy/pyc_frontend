@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/screens/index/components/index_appbar.dart';
@@ -10,6 +11,8 @@ import 'package:pyc/screens/index/components/index_drawer.dart';
 import 'package:pyc/screens/index/components/index_new_face_card.dart';
 import 'package:pyc/screens/index/components/index_user_profile.dart';
 import 'package:pyc/screens/index/components/index_user_search.dart';
+import 'package:pyc/screens/notice/notice_detail_screen.dart';
+import 'package:pyc/screens/notice/notice_screen.dart';
 
 class IndexScreen extends StatelessWidget {
   const IndexScreen({Key? key}) : super(key: key);
@@ -72,7 +75,9 @@ class IndexScreen extends StatelessWidget {
             //공자시항
             IndexContentLayout(
               title: '공지사항',
-              goContent: () {},
+              goContent: () {
+                Get.toNamed(NoticeScreen.routeName);
+              },
               child: Column(
                 children: [
                   IndexContentCard(
@@ -80,7 +85,9 @@ class IndexScreen extends StatelessWidget {
                     content: '12월 리더모임 일정안내',
                     subContent: '작성자 | 김은률',
                     thirdContent: '2일전',
-                    goTo: () {},
+                    goTo: () {
+                      Get.toNamed(NoticeDetailScreen.routeName);
+                    },
                   ),
                   kHalfHeightSizeBox,
                   IndexContentCard(
@@ -88,7 +95,9 @@ class IndexScreen extends StatelessWidget {
                     content: '12월 리더모임 일정안내',
                     subContent: '작성자 | 김은률',
                     thirdContent: '2일전',
-                    goTo: () {},
+                    goTo: () {
+                      Get.toNamed(NoticeDetailScreen.routeName);
+                    },
                   ),
                 ],
               ),
@@ -121,25 +130,18 @@ class IndexScreen extends StatelessWidget {
             IndexContentLayout(
               title: '열방 New Face',
               goContent: () {},
-              child: CarouselSlider(
-                items: [
-                  IndexNewFaceCard(
+              child: CarouselSlider.builder(
+                itemCount: 2,
+                itemBuilder: (context, index, realIndex) {
+                  return IndexNewFaceCard(
                     avatarChild: Image.asset('assets/images/test_user.png'),
                     comeDate: DateFormat('yyyy.MM.dd').format(
                       DateTime.now(),
                     ),
                     name: '이우길',
                     weekly: 2,
-                  ),
-                  IndexNewFaceCard(
-                    avatarChild: Image.asset('assets/images/test_user.png'),
-                    comeDate: DateFormat('yyyy.MM.dd').format(
-                      DateTime.now(),
-                    ),
-                    name: '임은하',
-                    weekly: 3,
-                  ),
-                ],
+                  );
+                },
                 options: CarouselOptions(
                   height: 190.0,
                   padEnds: false,
