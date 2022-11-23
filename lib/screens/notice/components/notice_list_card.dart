@@ -8,6 +8,7 @@ class NoticeListCard extends StatelessWidget {
   final int index;
   final String title;
   final String writer;
+  final String writerImage;
   final String content;
 
   const NoticeListCard({
@@ -16,6 +17,7 @@ class NoticeListCard extends StatelessWidget {
     required this.title,
     required this.writer,
     required this.content,
+    required this.writerImage,
   }) : super(key: key);
 
   @override
@@ -40,9 +42,7 @@ class NoticeListCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DefaultContentHeader(
-                avatar: Image.asset(
-                  'assets/images/test_user.png',
-                ),
+                avatar: Image.network(writerImage),
                 title: title,
                 content: '작성자 | $writer',
               ),

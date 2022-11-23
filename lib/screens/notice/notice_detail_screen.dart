@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/components/content/default_content_header.dart';
 import 'package:pyc/screens/notice/components/notice_appbar.dart';
@@ -39,7 +40,6 @@ class NoticeDetailScreen extends StatelessWidget {
       bottomSheet: SizedBox(
         width: double.infinity,
         height: 80,
-        // color: Colors.red,
         child: SingleChildScrollView(
           child: Container(
             color: Colors.white,
@@ -200,7 +200,7 @@ class Comment extends StatelessWidget {
                 bottom: BorderSide(color: Color(0xffF2F2F2), width: 1.0),
               ),
             ),
-          )
+          ),
       ],
     );
   }

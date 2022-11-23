@@ -37,6 +37,7 @@ class NoticeScreen extends StatelessWidget {
                       title: controller.notices.rows[index].title,
                       content: controller.notices.rows[index].content,
                       writer: controller.notices.rows[index].name,
+                      writerImage: controller.notices.rows[index].image,
                     ),
                   ),
                 ),

@@ -3,6 +3,7 @@ class NoticeResponse {
   final String title;
   final String content;
   final String name;
+  final String image;
   final String role;
   final DateTime createdAt;
   final DateTime lastModifiedAt;
@@ -12,6 +13,7 @@ class NoticeResponse {
     required this.title,
     required this.content,
     required this.name,
+    required this.image,
     required this.role,
     required this.createdAt,
     required this.lastModifiedAt,
@@ -22,6 +24,7 @@ class NoticeResponse {
         title = json['title'],
         content = json['content'],
         name = json['name'],
+        image = json['image'],
         role = json['role'],
         createdAt = DateTime.parse(json['createdAt']),
         lastModifiedAt = DateTime.parse(json['lastModifiedAt']);

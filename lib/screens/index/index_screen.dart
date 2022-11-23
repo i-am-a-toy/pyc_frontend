@@ -98,19 +98,29 @@ class IndexScreen extends StatelessWidget {
                       if (controller.notices.rows.isNotEmpty)
                         ...controller.notices.rows.map(
                           (e) => IndexContentCard(
-                            avatarChild:
-                                Image.asset('assets/images/test_user.png'),
+                            avatarChild: const Icon(
+                              Icons.campaign_outlined,
+                              size: kDefaultValue * 1.75,
+                              color: kTextWhiteColor,
+                            ),
                             content: e.title,
                             subContent: '작성자 | ${e.name}',
                             thirdContent: getDifferceTime(e.createdAt),
                             goTo: () {
-                              Get.toNamed(NoticeDetailScreen.routeName);
+                              Get.toNamed(
+                                NoticeDetailScreen.routeName,
+                                arguments: e.id,
+                              );
                             },
                           ),
                         )
                       else
                         const IndexContentCard(
-                          avatarChild: Icon(Icons.notifications_none_outlined),
+                          avatarChild: Icon(
+                            Icons.campaign_outlined,
+                            size: kDefaultValue * 1.75,
+                            color: Colors.white,
+                          ),
                           content: '등록 된 공지사항이 없습니다.',
                         ),
                     ],
@@ -118,7 +128,7 @@ class IndexScreen extends StatelessWidget {
                 ),
               ),
             ),
-            kHeightSizeBox,
+            kHalfHeightSizeBox,
             //일정안내
             IndexContentLayout(
               title: '일정 안내',
@@ -126,14 +136,22 @@ class IndexScreen extends StatelessWidget {
               child: Column(
                 children: [
                   IndexContentCard(
-                    avatarChild: const Icon(Icons.edit_calendar_outlined),
+                    avatarChild: const Icon(
+                      Icons.edit_calendar_outlined,
+                      size: kDefaultValue * 1.75,
+                      color: kTextWhiteColor,
+                    ),
                     content: '2022년 12월 연말 전도축제',
                     subContent: '시작일 | 22.12.25',
                     goTo: () {},
                   ),
                   kHalfHeightSizeBox,
                   IndexContentCard(
-                    avatarChild: const Icon(Icons.edit_calendar_outlined),
+                    avatarChild: const Icon(
+                      Icons.edit_calendar_outlined,
+                      size: kDefaultValue * 1.75,
+                      color: kTextWhiteColor,
+                    ),
                     content: '2022년 12월 연말 전도축제',
                     subContent: '시작일 | 22.12.25',
                     goTo: () {},

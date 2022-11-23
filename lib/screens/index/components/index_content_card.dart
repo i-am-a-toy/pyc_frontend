@@ -57,7 +57,7 @@ class IndexContentCard extends StatelessWidget {
                   kQuarterHeightSizedBox,
                   if (subContent != null)
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           subContent!,
@@ -65,7 +65,6 @@ class IndexContentCard extends StatelessWidget {
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                           ),
-                          textAlign: TextAlign.end,
                         ),
                         kQuarterWidthSizedBox,
                         if (thirdContent != null)
