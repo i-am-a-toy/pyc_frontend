@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pyc/common/constants/constants.dart';
+import 'package:pyc/common/utils/date/date.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
+import 'package:pyc/controllers/notice/index_notice_controller.dart';
 import 'package:pyc/controllers/user/fetch_me_controller.dart';
 import 'package:pyc/screens/index/components/index_appbar.dart';
 import 'package:pyc/screens/index/components/index_attendance.dart';
@@ -88,28 +90,32 @@ class IndexScreen extends StatelessWidget {
               goContent: () {
                 Get.toNamed(NoticeScreen.routeName);
               },
-              child: Column(
-                children: [
-                  IndexContentCard(
-                    avatarChild: Image.asset('assets/images/test_user.png'),
-                    content: '12월 리더모임 일정안내',
-                    subContent: '작성자 | 김은률',
-                    thirdContent: '2일전',
-                    goTo: () {
-                      Get.toNamed(NoticeDetailScreen.routeName);
-                    },
+              child: GetBuilder<IndexNoticeController>(
+                builder: (controller) => LoadingOverlay(
+                  isLoading: controller.isLoading,
+                  child: Column(
+                    children: [
+                      if (controller.notices.rows.isNotEmpty)
+                        ...controller.notices.rows.map(
+                          (e) => IndexContentCard(
+                            avatarChild:
+                                Image.asset('assets/images/test_user.png'),
+                            content: e.title,
+                            subContent: '작성자 | ${e.name}',
+                            thirdContent: getDifferceTime(e.createdAt),
+                            goTo: () {
+                              Get.toNamed(NoticeDetailScreen.routeName);
+                            },
+                          ),
+                        )
+                      else
+                        const IndexContentCard(
+                          avatarChild: Icon(Icons.notifications_none_outlined),
+                          content: '등록 된 공지사항이 없습니다.',
+                        ),
+                    ],
                   ),
-                  kHalfHeightSizeBox,
-                  IndexContentCard(
-                    avatarChild: Image.asset('assets/images/test_user.png'),
-                    content: '12월 리더모임 일정안내',
-                    subContent: '작성자 | 김은률',
-                    thirdContent: '2일전',
-                    goTo: () {
-                      Get.toNamed(NoticeDetailScreen.routeName);
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
             kHeightSizeBox,

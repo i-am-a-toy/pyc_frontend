@@ -5,23 +5,24 @@ class IndexContentCard extends StatelessWidget {
   final double? height;
   final Widget avatarChild;
   final String content;
-  final String subContent;
+  final String? subContent;
   final String? thirdContent;
-  final VoidCallback goTo;
+  final VoidCallback? goTo;
 
   const IndexContentCard({
     Key? key,
     this.height = 80.0,
     required this.avatarChild,
     required this.content,
-    required this.subContent,
+    this.subContent,
     this.thirdContent,
-    required this.goTo,
+    this.goTo,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: kDefaultValue / 2),
       width: double.infinity,
       height: height,
       decoration: BoxDecoration(
@@ -54,40 +55,42 @@ class IndexContentCard extends StatelessWidget {
                     ),
                   ),
                   kQuarterHeightSizedBox,
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        subContent,
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        textAlign: TextAlign.end,
-                      ),
-                      kQuarterWidthSizedBox,
-                      if (thirdContent != null)
+                  if (subContent != null)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
                         Text(
-                          thirdContent!,
+                          subContent!,
                           style: const TextStyle(
-                            fontSize: 12.0,
+                            fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                           ),
+                          textAlign: TextAlign.end,
                         ),
-                    ],
-                  )
+                        kQuarterWidthSizedBox,
+                        if (thirdContent != null)
+                          Text(
+                            thirdContent!,
+                            style: const TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                      ],
+                    )
                 ],
               ),
             ],
           ),
-          IconButton(
-            onPressed: goTo,
-            icon: const Icon(
-              Icons.keyboard_arrow_right_outlined,
-              size: 32.0,
-              color: kPrimaryColor,
+          if (subContent != null)
+            IconButton(
+              onPressed: goTo,
+              icon: const Icon(
+                Icons.keyboard_arrow_right_outlined,
+                size: 32.0,
+                color: kPrimaryColor,
+              ),
             ),
-          ),
         ],
       ),
     );

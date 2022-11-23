@@ -4,18 +4,18 @@ import 'package:pyc/components/content/default_content_header.dart';
 import 'package:pyc/components/text/over_flow_text.dart';
 import 'package:pyc/screens/notice/components/notice_comment_button.dart';
 
-List<String> texts = [
-  '감사합니다! 확인했습니다 :) 감사합니다! 확인했습니다 :) 감사합니다! 확인했습니다 :) 감사합니다! 확인했습니다 :) 감사합니다! 확인했습니다 :)',
-  '12월 청년부 일정에 대한 공지사항입니다. \n두번째 내용은 없습니다.',
-  '12월 청년부 일정에 대한 공지사항입니다. \n세번째 공지사항은 앞으로 여러분들과 함께 할 어플을 공개합니다.',
-];
-
 class NoticeListCard extends StatelessWidget {
   final int index;
+  final String title;
+  final String writer;
+  final String content;
 
   const NoticeListCard({
     Key? key,
     required this.index,
+    required this.title,
+    required this.writer,
+    required this.content,
   }) : super(key: key);
 
   @override
@@ -39,17 +39,16 @@ class NoticeListCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // TODO: 넘겨받은 데이터로 Content Header를 그려줘야 한다.
               DefaultContentHeader(
                 avatar: Image.asset(
                   'assets/images/test_user.png',
                 ),
-                title: '12월 공지사항 입니다.',
-                content: '작성자 | 이우길',
+                title: title,
+                content: '작성자 | $writer',
               ),
               kHeightSizeBox,
               OverFlowText(
-                text: texts[index],
+                text: content,
                 tag: 'notice$index',
                 onTap: () {},
               ),
