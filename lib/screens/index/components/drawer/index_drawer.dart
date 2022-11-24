@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
-import 'package:pyc/screens/index/components/index_drawer_list_title.dart';
+import 'package:pyc/screens/index/components/drawer/index_drawer_list_title.dart';
 import 'package:pyc/screens/notice/notice_screen.dart';
 
 class IndexDrawer extends StatelessWidget {

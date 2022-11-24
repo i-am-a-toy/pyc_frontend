@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pyc/common/constants/constants.dart';
 
-class IndexContentLayout extends StatelessWidget {
+class IndexLayout extends StatelessWidget {
   final String title;
   final VoidCallback goContent;
   final Widget child;
 
-  const IndexContentLayout({
+  const IndexLayout({
     Key? key,
     required this.title,
     required this.goContent,

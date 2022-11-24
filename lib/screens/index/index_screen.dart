@@ -7,14 +7,16 @@ import 'package:pyc/common/utils/date/date.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/notice/index_notice_controller.dart';
 import 'package:pyc/controllers/user/fetch_me_controller.dart';
-import 'package:pyc/screens/index/components/index_appbar.dart';
+import 'package:pyc/data/model/notice/response/notice_response.dart';
+import 'package:pyc/screens/index/components/appbar/index_appbar.dart';
+import 'package:pyc/screens/index/components/card/index_content_icon.dart';
+import 'package:pyc/screens/index/components/drawer/index_drawer.dart';
 import 'package:pyc/screens/index/components/index_attendance.dart';
 import 'package:pyc/screens/index/components/index_content_card.dart';
-import 'package:pyc/screens/index/components/index_content_layout.dart';
-import 'package:pyc/screens/index/components/index_drawer.dart';
 import 'package:pyc/screens/index/components/index_new_face_card.dart';
 import 'package:pyc/screens/index/components/index_user_profile.dart';
 import 'package:pyc/screens/index/components/index_user_search.dart';
+import 'package:pyc/screens/index/components/layout/index_layout.dart';
 import 'package:pyc/screens/notice/notice_detail_screen.dart';
 import 'package:pyc/screens/notice/notice_screen.dart';
 
@@ -29,17 +31,11 @@ class IndexScreen extends StatelessWidget {
       appBar: getIndexAppbar(),
       drawer: GetBuilder<FetchMeController>(
         builder: (controller) => LoadingOverlay(
-          isLoading: controller.isLoading,
-          child: IndexDrawer(
-            size: size,
-            name: controller.name,
-          ),
-        ),
+            isLoading: controller.isLoading,
+            child: IndexDrawer(size: size, name: controller.name)),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: kDefaultValue,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: kDefaultValue),
         child: Column(
           children: [
             // 유저 프로필
@@ -58,7 +54,7 @@ class IndexScreen extends StatelessWidget {
             const IndexUserSearch(leadingIcon: Icons.search_outlined),
             kHeightSizeBox,
             //출석
-            IndexContentLayout(
+            IndexLayout(
               title: '출석현황',
               goContent: () {},
               child: SizedBox(
@@ -85,41 +81,34 @@ class IndexScreen extends StatelessWidget {
             ),
             kHeightSizeBox,
             //공자시항
-            IndexContentLayout(
+            IndexLayout(
               title: '공지사항',
-              goContent: () {
-                Get.toNamed(NoticeScreen.routeName);
-              },
+              goContent: () => Get.toNamed(NoticeScreen.routeName),
               child: GetBuilder<IndexNoticeController>(
                 builder: (controller) => LoadingOverlay(
                   isLoading: controller.isLoading,
                   child: Column(
                     children: [
-                      if (controller.notices.rows.isNotEmpty)
-                        ...controller.notices.rows.map(
-                          (e) => IndexContentCard(
-                            avatarChild: const Icon(
-                              Icons.campaign_outlined,
-                              size: kDefaultValue * 1.75,
-                              color: kTextWhiteColor,
-                            ),
-                            content: e.title,
-                            subContent: '작성자 | ${e.name}',
-                            thirdContent: getDifferceTime(e.createdAt),
-                            goTo: () {
-                              Get.toNamed(
-                                NoticeDetailScreen.routeName,
-                                arguments: e.id,
-                              );
-                            },
-                          ),
-                        )
-                      else
-                        const IndexContentCard(
-                          avatarChild: Icon(
+                      for (NoticeResponse resp in controller.notices.rows)
+                        IndexContentCard(
+                          // avatarChild: const Icon(
+                          avatarChild: getIndexContentCardIcon(
                             Icons.campaign_outlined,
-                            size: kDefaultValue * 1.75,
-                            color: Colors.white,
+                          ),
+                          content: resp.title,
+                          subContent: '작성자 | ${resp.name}',
+                          thirdContent: getDifferceTime(resp.createdAt),
+                          goTo: () {
+                            Get.toNamed(
+                              NoticeDetailScreen.routeName,
+                              arguments: resp.id,
+                            );
+                          },
+                        ),
+                      if (controller.notices.count == 0)
+                        IndexContentCard(
+                          avatarChild: getIndexContentCardIcon(
+                            Icons.campaign_outlined,
                           ),
                           content: '등록 된 공지사항이 없습니다.',
                         ),
@@ -130,7 +119,7 @@ class IndexScreen extends StatelessWidget {
             ),
             kHalfHeightSizeBox,
             //일정안내
-            IndexContentLayout(
+            IndexLayout(
               title: '일정 안내',
               goContent: () {},
               child: Column(
@@ -161,7 +150,7 @@ class IndexScreen extends StatelessWidget {
             ),
             kHeightSizeBox,
             //새친구 소개
-            IndexContentLayout(
+            IndexLayout(
               title: '열방 New Face',
               goContent: () {},
               child: CarouselSlider.builder(

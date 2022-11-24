@@ -29,21 +29,43 @@ class NoticeScreen extends StatelessWidget {
             GetBuilder<NoticeController>(
               builder: (controller) => LoadingOverlay(
                 isLoading: controller.isLoading,
-                child: Expanded(
-                  child: ListView.builder(
-                    itemCount: controller.notices.rows.length,
-                    itemBuilder: (context, index) => NoticeListCard(
-                      index: index,
-                      title: controller.notices.rows[index].title,
-                      content: controller.notices.rows[index].content,
-                      writer: controller.notices.rows[index].name,
-                      writerImage: controller.notices.rows[index].image,
-                    ),
-                  ),
-                ),
+                child: controller.notices.count != 0
+                    ? _content(controller)
+                    : _noContent(),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _content(NoticeController controller) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: controller.notices.rows.length,
+        itemBuilder: (context, index) => NoticeListCard(
+          index: index,
+          title: controller.notices.rows[index].title,
+          content: controller.notices.rows[index].content,
+          writer: controller.notices.rows[index].name,
+          writerImage: controller.notices.rows[index].image,
+        ),
+      ),
+    );
+  }
+
+  Widget _noContent() {
+    return const Expanded(
+      child: Align(
+        alignment: Alignment.center,
+        child: Text(
+          '등록된 공지사항이 없습니다.',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16.0,
+            color: kPrimaryColor,
+          ),
         ),
       ),
     );

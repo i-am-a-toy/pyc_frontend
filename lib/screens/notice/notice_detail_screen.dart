@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/components/content/default_content_header.dart';
 import 'package:pyc/screens/notice/components/notice_appbar.dart';
@@ -36,7 +35,11 @@ class NoticeDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: getNoticeAppBar(onTap: () {}),
+      appBar: getNoticeAppBar(
+        onTap: () {
+          print('수정하기');
+        },
+      ),
       bottomSheet: SizedBox(
         width: double.infinity,
         height: 80,

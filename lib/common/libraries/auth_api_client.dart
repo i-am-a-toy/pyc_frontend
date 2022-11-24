@@ -10,6 +10,8 @@ import 'package:pyc/screens/login/login_screen.dart';
 Future<Dio> getAuthApiClient() async {
   final dio = Dio(
     BaseOptions(
+      maxRedirects: 1,
+      connectTimeout: 2000,
       baseUrl: dotenv.get('BASE_URL', fallback: 'http://localhost:3000'),
     ),
   );
