@@ -26,42 +26,44 @@ class NoticeListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: kDefaultValue),
-      width: double.infinity,
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.only(
-        top: kDefaultValue,
-        left: kDefaultValue,
-        right: kDefaultValue,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DefaultContentHeader(
-                avatarImage: NetworkImage(writerImage),
-                title: title,
-                content: '작성자 | $writer',
-              ),
-              kHeightSizeBox,
-              OverFlowText(
-                text: content,
-                tag: 'notice$index',
-                onTap: onTap,
-              ),
-              kHalfHeightSizeBox,
-            ],
-          ),
-          //Comment Button
-          Expanded(child: NoticeCommentButton(onTap: commentTap)),
-        ],
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: kDefaultValue),
+        width: double.infinity,
+        height: 200,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.only(
+          top: kDefaultValue,
+          left: kDefaultValue,
+          right: kDefaultValue,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DefaultContentHeader(
+                  avatarImage: NetworkImage(writerImage),
+                  title: title,
+                  content: '작성자 | $writer',
+                ),
+                kHeightSizeBox,
+                OverFlowText(
+                  text: content,
+                  tag: 'notice$index',
+                ),
+                kHalfHeightSizeBox,
+              ],
+            ),
+            //Comment Button
+            Expanded(child: NoticeCommentButton(onTap: commentTap)),
+          ],
+        ),
       ),
     );
   }

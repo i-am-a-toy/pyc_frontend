@@ -9,13 +9,13 @@ class OverFlowText extends StatelessWidget {
   final Color? fontColor;
   final double? fontSize;
   final FontWeight? fontWeight;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final String? tag;
 
   const OverFlowText({
     Key? key,
     required this.text,
-    required this.onTap,
+    this.onTap,
     this.maxLine = 2,
     this.fontColor = kTextBlackColor,
     this.fontSize = 14.0,
