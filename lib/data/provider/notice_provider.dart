@@ -16,4 +16,9 @@ class NoticeProvider {
     };
     return client.get('/api/v1/notices', queryParameters: queryParameter);
   }
+
+  Future<Response> findOneById(int id) async {
+    final client = await getAuthApiClient();
+    return client.get('/api/v1/notices/$id');
+  }
 }

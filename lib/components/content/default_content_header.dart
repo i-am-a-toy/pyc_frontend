@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pyc/common/constants/constants.dart';
 
 class DefaultContentHeader extends StatelessWidget {
-  final Widget avatar;
   final String title;
   final String content;
+  final ImageProvider? avatarImage;
+  final Widget? avatar;
   final double? width;
   final String? subContent;
   final double? avatarRadius;
@@ -17,18 +18,19 @@ class DefaultContentHeader extends StatelessWidget {
 
   const DefaultContentHeader({
     Key? key,
-    required this.avatar,
     required this.title,
     required this.content,
+    this.avatar,
     this.subContent,
     this.avatarRadius = 24.0,
     this.titleSize = 16.0,
     this.titleColor = kPrimaryColor,
     this.contentSize = 14.0,
     this.contentColor = kTextGreyColor,
-    this.subContentSize,
-    this.subContentColor,
+    this.subContentSize = 12.0,
+    this.subContentColor = kTextGreyColor,
     this.width,
+    this.avatarImage,
   }) : super(key: key);
 
   @override
@@ -37,9 +39,10 @@ class DefaultContentHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         CircleAvatar(
-          backgroundColor: kPrimaryColor,
+          backgroundColor: kSecondaryColor,
           maxRadius: avatarRadius,
-          child: avatar,
+          backgroundImage: avatar == null ? avatarImage : null,
+          child: avatarImage == null ? avatar : null,
         ),
         kWidthSizeBox,
         Column(
@@ -56,7 +59,7 @@ class DefaultContentHeader extends StatelessWidget {
             ),
             kQuarterHeightSizedBox,
             Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
                   width: width,

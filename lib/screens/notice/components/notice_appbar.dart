@@ -17,7 +17,7 @@ PreferredSizeWidget getNoticeAppBar({VoidCallback? onTap}) {
       IconButton(
         onPressed: onTap,
         icon: SvgPicture.asset(
-          'assets/icons/write_icon.svg',
+          'assets/icons/pencil_icon.svg',
           width: kDefaultValue * 2,
           color: kTextWhiteColor,
         ),

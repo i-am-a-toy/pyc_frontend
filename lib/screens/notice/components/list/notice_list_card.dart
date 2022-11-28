@@ -10,6 +10,8 @@ class NoticeListCard extends StatelessWidget {
   final String writer;
   final String writerImage;
   final String content;
+  final VoidCallback onTap;
+  final VoidCallback commentTap;
 
   const NoticeListCard({
     Key? key,
@@ -18,6 +20,8 @@ class NoticeListCard extends StatelessWidget {
     required this.writer,
     required this.content,
     required this.writerImage,
+    required this.onTap,
+    required this.commentTap,
   }) : super(key: key);
 
   @override
@@ -42,7 +46,7 @@ class NoticeListCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DefaultContentHeader(
-                avatar: Image.network(writerImage),
+                avatarImage: NetworkImage(writerImage),
                 title: title,
                 content: '작성자 | $writer',
               ),
@@ -50,17 +54,13 @@ class NoticeListCard extends StatelessWidget {
               OverFlowText(
                 text: content,
                 tag: 'notice$index',
-                onTap: () {},
+                onTap: onTap,
               ),
               kHalfHeightSizeBox,
             ],
           ),
           //Comment Button
-          Expanded(
-            child: NoticeCommentButton(
-              onTap: () {},
-            ),
-          ),
+          Expanded(child: NoticeCommentButton(onTap: commentTap)),
         ],
       ),
     );

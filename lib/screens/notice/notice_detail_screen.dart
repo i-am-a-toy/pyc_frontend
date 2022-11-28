@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/components/content/default_content_header.dart';
+import 'package:pyc/components/loading/loading_overlay.dart';
+import 'package:pyc/controllers/notice/notice_detail_controller.dart';
 import 'package:pyc/screens/notice/components/notice_appbar.dart';
 
 //https://blog.naver.com/PostView.nhn?blogId=getinthere&logNo=221845651741
@@ -35,131 +39,140 @@ class NoticeDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: getNoticeAppBar(
-        onTap: () {
-          print('수정하기');
-        },
-      ),
-      bottomSheet: SizedBox(
-        width: double.infinity,
-        height: 80,
-        child: SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            padding: EdgeInsets.only(
-              top: kDefaultValue / 2,
-              left: kDefaultValue,
-              right: kDefaultValue,
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: TextFormField(
-              cursorColor: kPrimaryColor,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: kSpacerColor,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-                hintText: '댓글을 입력해주세요.',
-                hintStyle: const TextStyle(fontSize: 18.0),
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kDefaultValue / 2,
+      appBar: getNoticeAppBar(onTap: () {}),
+      bottomSheet: GetBuilder<NoticeDetailController>(
+        builder: (controller) => SizedBox(
+          width: double.infinity,
+          height: 80,
+          child: SingleChildScrollView(
+            child: Container(
+              color: Colors.white,
+              padding: EdgeInsets.only(
+                top: kDefaultValue / 2,
+                left: kDefaultValue,
+                right: kDefaultValue,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: TextFormField(
+                autofocus: controller.autoFocus,
+                cursorColor: kPrimaryColor,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: kSpacerColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
-                  child: CircleAvatar(
-                    backgroundColor: kPrimaryColor,
-                    child: Image.asset(
-                      'assets/images/test_user.png',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  hintText: '댓글을 입력해주세요.',
+                  hintStyle: const TextStyle(fontSize: 18.0),
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kDefaultValue / 2,
+                    ),
+                    child: CircleAvatar(
+                      backgroundColor: kPrimaryColor,
+                      child: Image.asset(
+                        'assets/images/test_user.png',
+                      ),
                     ),
                   ),
-                ),
-                suffixIcon: SvgPicture.asset(
-                  'assets/icons/send_icon.svg',
-                  height: 5,
-                  width: 5,
-                  fit: BoxFit.scaleDown,
-                  color: kPrimaryColor,
+                  suffixIcon: SvgPicture.asset(
+                    'assets/icons/send_icon.svg',
+                    height: 5,
+                    width: 5,
+                    fit: BoxFit.scaleDown,
+                    color: kPrimaryColor,
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: kDefaultValue * 2,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: kDefaultValue,
+      body: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: kDefaultValue * 2,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DefaultContentHeader(
-                  avatar: Image.asset(
-                    'assets/images/test_user.png',
+            // Notice Header
+            GetBuilder<NoticeDetailController>(
+              builder: (controller) => LoadingOverlay(
+                isLoading: controller.isLoading,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kDefaultValue,
                   ),
-                  title: '12월 공지사항 입니다.',
-                  content: '작성자 | 이우길',
-                ),
-                const SizedBox(
-                  height: kDefaultValue * 1.5,
-                ),
-                Text(
-                  noticeContent,
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w400,
-                    color: kTextBlackColor,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DefaultContentHeader(
+                        avatarImage: NetworkImage(controller.image),
+                        title: controller.title,
+                        content: '작성자 | ${controller.name}',
+                        subContent: DateFormat('yyyy.MM.dd HH시 mm분').format(
+                          controller.createdAt.toLocal(),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: kDefaultValue * 1.5,
+                      ),
+                      Text(
+                        controller.content,
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w400,
+                          color: kTextBlackColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: kDefaultValue * 2,
-          ),
-          Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(color: Color(0xffF2F2F2), width: 8.0),
               ),
             ),
-          ),
-          kHeightSizeBox,
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: kDefaultValue),
-            child: Text(
-              '댓글 20개',
-              style: TextStyle(
-                color: kTextGreyColor,
-                fontSize: 12.0,
+            const SizedBox(height: kDefaultValue * 2),
+            // spacer
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Color(0xffF2F2F2), width: 8.0),
+                ),
               ),
             ),
-          ),
-          kHeightSizeBox,
-          Expanded(
-            child: ListView.builder(
-              itemCount: 20,
-              itemBuilder: (context, index) {
-                return Comment(
-                  index: index,
-                  length: comments.length,
-                );
-              },
+            kHeightSizeBox,
+            // comment Count
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: kDefaultValue),
+              child: Text(
+                '댓글 20개',
+                style: TextStyle(
+                  color: kTextGreyColor,
+                  fontSize: 12.0,
+                ),
+              ),
             ),
-          ),
-        ],
+            //     kHeightSizeBox,
+            //     Expanded(
+            //       child: ListView.builder(
+            //         itemCount: 20,
+            //         itemBuilder: (context, index) {
+            //           return Comment(
+            //             index: index,
+            //             length: comments.length,
+            //           );
+            //         },
+            //       ),
+            //     ),
+          ],
+        ),
       ),
     );
   }

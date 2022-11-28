@@ -101,7 +101,10 @@ class IndexScreen extends StatelessWidget {
                           goTo: () {
                             Get.toNamed(
                               NoticeDetailScreen.routeName,
-                              arguments: resp.id,
+                              arguments: {
+                                "targetId": resp.id,
+                                "autoFocus": false,
+                              },
                             );
                           },
                         ),
