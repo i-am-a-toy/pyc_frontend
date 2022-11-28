@@ -9,19 +9,21 @@ class NoticeListNoContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Get.find<NoticeController>().hasMore
-          ? const CircularProgressIndicator(
-              color: kPrimaryColor,
-            )
-          : Text(
-              content,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
+    return GetBuilder<NoticeController>(
+      builder: (controller) => Center(
+        child: Get.find<NoticeController>().hasMore
+            ? const CircularProgressIndicator(
                 color: kPrimaryColor,
-                fontSize: 14.0,
+              )
+            : Text(
+                content,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: kPrimaryColor,
+                  fontSize: 14.0,
+                ),
               ),
-            ),
+      ),
     );
   }
 }
