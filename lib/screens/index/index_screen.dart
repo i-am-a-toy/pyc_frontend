@@ -96,7 +96,7 @@ class IndexScreen extends StatelessWidget {
                             Icons.campaign_outlined,
                           ),
                           content: resp.title,
-                          subContent: '작성자 | ${resp.name}',
+                          subContent: '작성자 | ${resp.creator.name}',
                           thirdContent: getDifferceTime(resp.createdAt),
                           goTo: () {
                             Get.toNamed(

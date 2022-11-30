@@ -39,6 +39,7 @@ class NoticeController extends GetxController {
 
     try {
       _notices = _notices = await _fetch(_initOffset, _initLimit);
+      if (_notices.rows.length < kDefaultValue) _hasMore = false;
       _isLoading = false;
       update();
     } catch (e) {
@@ -100,7 +101,7 @@ class NoticeController extends GetxController {
 
       // fetch & append
       final resp = await _fetch(_initLimit, _initOffset);
-      _notices.rows.addAll(resp.rows);
+      _notices.rows.insertAll(_notices.rows.length - 1, resp.rows);
 
       // 더이상 Data가 없을 경우
       if (resp.rows.length < kDefaultValue.toInt()) _hasMore = false;

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,7 +17,6 @@ class IndexNoticeController extends GetxController {
 
   @override
   @mustCallSuper
-  @override
   void onInit() async {
     super.onInit();
     try {

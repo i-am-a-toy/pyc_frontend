@@ -8,7 +8,7 @@ class NoticeListCard extends StatelessWidget {
   final int index;
   final String title;
   final String writer;
-  final String writerImage;
+  final String? writerImage;
   final String content;
   final VoidCallback onTap;
   final VoidCallback commentTap;
@@ -48,7 +48,13 @@ class NoticeListCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DefaultContentHeader(
-                  avatarImage: NetworkImage(writerImage),
+                  avatarImage: writerImage != null
+                      ? NetworkImage(writerImage!)
+                      : Image.asset(
+                          'assets/icons/person_icon.png',
+                          width: kDefaultValue,
+                          height: kDefaultValue,
+                        ).image,
                   title: title,
                   content: '작성자 | $writer',
                 ),
