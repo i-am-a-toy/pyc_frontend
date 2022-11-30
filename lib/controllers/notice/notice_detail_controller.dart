@@ -17,8 +17,8 @@ class NoticeDetailController extends GetxController {
   String _title = '';
   String _content = '';
   String _name = '';
-  String _image = '';
   String _role = '';
+  String? _image;
   DateTime _createdAt = DateTime.now();
   DateTime _lastModifiedAt = DateTime.now();
 
@@ -29,9 +29,9 @@ class NoticeDetailController extends GetxController {
     _id = resp.id;
     _title = resp.title;
     _content = resp.content;
-    _name = resp.name;
-    _image = resp.image;
-    _role = resp.role;
+    _name = resp.creator.name;
+    _image = resp.creator.image;
+    _role = resp.creator.role;
     _createdAt = resp.createdAt;
     _lastModifiedAt = resp.lastModifiedAt;
     _isLoading = false;
@@ -43,7 +43,7 @@ class NoticeDetailController extends GetxController {
   String get title => _title;
   String get content => _content;
   String get name => _name;
-  String get image => _image;
+  String? get image => _image;
   String get role => _role;
   DateTime get createdAt => _createdAt;
   DateTime get lastModifiedAt => _lastModifiedAt;
