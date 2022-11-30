@@ -67,7 +67,12 @@ class NoticeListCard extends StatelessWidget {
               ],
             ),
             //Comment Button
-            Expanded(child: NoticeCommentButton(onTap: commentTap)),
+            SizedBox(
+              height: kDefaultValue * 2,
+              child: NoticeCommentButton(
+                onTap: commentTap,
+              ),
+            ),
           ],
         ),
       ),

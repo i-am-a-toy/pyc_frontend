@@ -50,6 +50,8 @@ class NoticeController extends GetxController {
   void sort(SortType sortType) async {
     // fetch loading
     _isLoading = true;
+    _initOffset = 0;
+    _initLimit = kDefaultValue.toInt();
     update();
 
     try {
@@ -92,6 +94,9 @@ class NoticeController extends GetxController {
     /// 맨 마지막을 내리기 전 offset에 default를 더해서 조금 더 빠르게 Loading하기 위해 offset에 값을 더함
     if (_scrollController.position.maxScrollExtent <
         _scrollController.offset + kDefaultValue / 2) {
+      // 데이터가 더 이상 없으면 리패칭 금지.
+      if (!_hasMore) return;
+
       // change MaxPosition
       _isMaxPosition = true;
       update();
