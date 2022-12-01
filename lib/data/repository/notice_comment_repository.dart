@@ -14,7 +14,6 @@ class NoticeCommentRepository extends GetxService {
     final result = await provider.findAllComment(noticeId, offset, limit);
     NoticeCommentListResponse response =
         NoticeCommentListResponse.fromJSON(result.data);
-
     return response;
   }
 }

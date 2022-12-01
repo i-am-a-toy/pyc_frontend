@@ -43,3 +43,7 @@ const kHalfWidthSizedBox = SizedBox(
 const kQuarterWidthSizedBox = SizedBox(
   width: kDefaultValue / 4,
 );
+
+final kDefaultUserImage = Image.asset(
+  'assets/icons/person_icon.png',
+).image;

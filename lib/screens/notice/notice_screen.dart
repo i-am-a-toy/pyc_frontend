@@ -31,9 +31,7 @@ class NoticeScreen extends StatelessWidget {
               GetBuilder<NoticeController>(
                 builder: (controller) => LoadingOverlay(
                   isLoading: controller.isLoading,
-                  child: controller.notices.count != 0
-                      ? NoticeContent(controller: controller)
-                      : const NoticeNoContent(),
+                  child: controller.notices.count != 0 ? NoticeContent(controller: controller) : const NoticeNoContent(),
                 ),
               ),
             ],

@@ -16,12 +16,14 @@ class NoticeCommentController extends GetxController {
   bool _isLoading = true;
   int _initOffset = 0;
   int _initLimit = kDefaultValue.toInt();
+  bool _hasMore = false;
   NoticeCommentListResponse _noticeComments = NoticeCommentListResponse(
     rows: [],
     count: 0,
   );
 
   bool get isLoding => _isLoading;
+  bool get hasMore => _hasMore;
   NoticeCommentListResponse get noticeComments => _noticeComments;
 
   @override
@@ -29,6 +31,7 @@ class NoticeCommentController extends GetxController {
     super.onInit();
     try {
       await fetch(noticeId, _initOffset, _initLimit);
+      if (_noticeComments.count > kDefaultValue.toInt()) _hasMore = true;
       _isLoading = false;
       update();
     } catch (e) {

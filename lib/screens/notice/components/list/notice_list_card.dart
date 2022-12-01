@@ -31,7 +31,7 @@ class NoticeListCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: kDefaultValue),
         width: double.infinity,
-        height: 200,
+        height: 220,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -68,7 +68,7 @@ class NoticeListCard extends StatelessWidget {
             ),
             //Comment Button
             SizedBox(
-              height: kDefaultValue * 2,
+              height: kDefaultValue * 2.5,
               child: NoticeCommentButton(
                 onTap: commentTap,
               ),
