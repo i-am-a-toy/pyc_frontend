@@ -38,10 +38,19 @@ class NoticeDetailScreen extends StatelessWidget {
                       children: [
                         DefaultContentHeader(
                           avatarImage: controller.image != null ? NetworkImage(controller.image!) : kDefaultUserImage,
-                          title: controller.title,
-                          content: '작성자 | ${controller.name}',
-                          subContent: DateFormat('yyyy.MM.dd HH시 mm분').format(
+                          title: '작성자 | ${controller.name}',
+                          content: DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(
                             controller.createdAt.toLocal(),
+                          ),
+                          width: MediaQuery.of(context).size.width * 0.7,
+                        ),
+                        kHeightSizeBox,
+                        Text(
+                          controller.title,
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: kPrimaryColor,
                           ),
                         ),
                         kHeightSizeBox,
@@ -107,6 +116,9 @@ class NoticeDetailScreen extends StatelessWidget {
                                   ? NetworkImage(controller.noticeComments.rows[i].creator.image!)
                                   : kDefaultUserImage,
                               width: MediaQuery.of(context).size.width * 0.7,
+                              subContent: DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(
+                                controller.noticeComments.rows[i].createdAt.toLocal(),
+                              ),
                             ),
                           ),
                           if (i != controller.noticeComments.rows.length - 1)

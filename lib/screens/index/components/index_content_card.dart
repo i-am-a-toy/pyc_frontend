@@ -21,6 +21,7 @@ class IndexContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.only(bottom: kDefaultValue / 2),
       width: double.infinity,
@@ -46,12 +47,16 @@ class IndexContentCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    content,
-                    style: const TextStyle(
-                      color: kPrimaryColor,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+                  SizedBox(
+                    width: size.width * 0.5,
+                    child: Text(
+                      content,
+                      style: const TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        color: kPrimaryColor,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   kQuarterHeightSizedBox,

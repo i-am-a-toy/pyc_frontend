@@ -48,6 +48,7 @@ class NoticeListCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DefaultContentHeader(
+                  width: MediaQuery.of(context).size.width * 0.65,
                   avatarImage: writerImage != null
                       ? NetworkImage(writerImage!)
                       : Image.asset(

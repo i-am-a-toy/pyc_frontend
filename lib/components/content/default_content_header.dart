@@ -37,6 +37,7 @@ class DefaultContentHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CircleAvatar(
           backgroundColor: kSecondaryColor,
@@ -49,43 +50,40 @@ class DefaultContentHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: kPrimaryColor,
-                fontSize: titleSize,
-                fontWeight: FontWeight.bold,
+            SizedBox(
+              width: width,
+              child: Text(
+                overflow: TextOverflow.ellipsis,
+                title,
+                style: TextStyle(
+                  color: kPrimaryColor,
+                  fontSize: titleSize,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             kQuarterHeightSizedBox,
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  width: width,
-                  child: SizedBox(
-                    child: Text(
-                      content,
-                      style: TextStyle(
-                        fontSize: contentSize,
-                        fontWeight: FontWeight.w400,
-                        color: contentColor,
-                      ),
-                    ),
-                  ),
+            SizedBox(
+              width: width,
+              child: Text(
+                content,
+                style: TextStyle(
+                  fontSize: contentSize,
+                  fontWeight: FontWeight.w400,
+                  color: contentColor,
                 ),
-                kQuarterWidthSizedBox,
-                if (subContent != null)
-                  Text(
-                    subContent!,
-                    style: TextStyle(
-                      fontSize: subContentSize,
-                      fontWeight: FontWeight.w400,
-                      color: subContentColor,
-                    ),
-                  ),
-              ],
+              ),
             ),
+            kHalfHeightSizeBox,
+            if (subContent != null)
+              Text(
+                subContent!,
+                style: TextStyle(
+                  fontSize: subContentSize,
+                  fontWeight: FontWeight.w400,
+                  color: subContentColor,
+                ),
+              ),
           ],
         ),
       ],
