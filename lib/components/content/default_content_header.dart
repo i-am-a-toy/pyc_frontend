@@ -51,7 +51,6 @@ class DefaultContentHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: width,
               child: Text(
                 overflow: TextOverflow.ellipsis,
                 title,

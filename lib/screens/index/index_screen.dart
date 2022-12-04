@@ -90,9 +90,9 @@ class IndexScreen extends StatelessWidget {
                           avatarChild: getIndexContentCardIcon(
                             Icons.campaign_outlined,
                           ),
-                          content: resp.title,
-                          subContent: '작성자 | ${resp.creator.name}',
-                          thirdContent: getDifferceTime(resp.createdAt),
+                          title: resp.title,
+                          content: '작성자 | ${resp.creator.name}',
+                          subContent: getDifferceTime(resp.createdAt),
                           goTo: () {
                             Get.toNamed(
                               NoticeDetailScreen.routeName,
@@ -105,10 +105,11 @@ class IndexScreen extends StatelessWidget {
                         ),
                       if (controller.notices.count == 0)
                         IndexContentCard(
+                          title: '등록 된 공지사항이 없습니다.',
                           avatarChild: getIndexContentCardIcon(
                             Icons.campaign_outlined,
                           ),
-                          content: '등록 된 공지사항이 없습니다.',
+                          content: '공지사항을 등록해주세요.',
                         ),
                     ],
                   ),
@@ -128,21 +129,11 @@ class IndexScreen extends StatelessWidget {
                       size: kDefaultValue * 1.75,
                       color: kTextWhiteColor,
                     ),
-                    content: '2022년 12월 연말 전도축제',
-                    subContent: '시작일 | 22.12.25',
+                    title: '2022년 12월 연말 전도축제',
+                    content: '시작일 | 22.12.25',
                     goTo: () {},
                   ),
                   kHalfHeightSizeBox,
-                  IndexContentCard(
-                    avatarChild: const Icon(
-                      Icons.edit_calendar_outlined,
-                      size: kDefaultValue * 1.75,
-                      color: kTextWhiteColor,
-                    ),
-                    content: '2022년 12월 연말 전도축제',
-                    subContent: '시작일 | 22.12.25',
-                    goTo: () {},
-                  ),
                 ],
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/snackbar/snackbar.dart';
 import 'package:pyc/components/appbar/default_appbar.dart';
+import 'package:pyc/components/content/default_avatar_content.dart';
 import 'package:pyc/components/seperator/default_divider.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/notice/notice_detail_controller.dart';
@@ -54,52 +55,11 @@ class NoticeDetailScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              maxRadius: 24.0,
-                              backgroundColor: kPrimaryColor,
-                              backgroundImage: controller.image != null ? NetworkImage(controller.image!) : kDefaultUserImage,
-                            ),
-                            kHalfWidthSizedBox,
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    controller.title,
-                                    style: const TextStyle(
-                                      color: kPrimaryColor,
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  kQuarterHeightSizedBox,
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        '작성자 | ${controller.name}',
-                                        style: const TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      kQuarterWidthSizedBox,
-                                      Text(
-                                        DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(controller.createdAt.toLocal()).toString(),
-                                        style: const TextStyle(
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        DefaultAvatarContent(
+                          title: controller.title,
+                          content: '작성자 | ${controller.name}',
+                          subContent: DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(controller.createdAt.toLocal()).toString(),
+                          avatarImage: controller.image,
                         ),
                         kHeightSizeBox,
                         Text(
@@ -150,49 +110,11 @@ class NoticeDetailScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               kHalfHeightSizeBox,
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    maxRadius: 24.0,
-                                    backgroundColor: kPrimaryColor,
-                                    backgroundImage: controller.noticeComments.rows[i].creator.image != null
-                                        ? NetworkImage(controller.noticeComments.rows[i].creator.image!)
-                                        : kDefaultUserImage,
-                                  ),
-                                  kHalfWidthSizedBox,
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Text(controller.noticeComments.rows[i].comment),
-                                        kQuarterHeightSizedBox,
-                                        Row(
-                                          children: [
-                                            Text(
-                                              '작성자 | ${controller.noticeComments.rows[i].creator.name}',
-                                              style: const TextStyle(
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                            kQuarterWidthSizedBox,
-                                            Text(
-                                              DateFormat('yyyy년 MM월 dd일 HH시 mm분')
-                                                  .format(
-                                                    controller.noticeComments.rows[i].createdAt,
-                                                  )
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                fontSize: 12.0,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                              DefaultAvatarContent(
+                                title: controller.noticeComments.rows[i].comment,
+                                content: '작성자 | ${controller.noticeComments.rows[i].creator.name}',
+                                subContent: DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(controller.noticeComments.rows[i].createdAt).toString(),
+                                avatarImage: controller.noticeComments.rows[i].creator.image,
                               ),
                               kHalfHeightSizeBox,
                               if (i != controller.noticeComments.rows.length - 1)
