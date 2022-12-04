@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/snackbar/snackbar.dart';
+import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/seperator/default_divider.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/notice/notice_detail_controller.dart';
 import 'package:pyc/controllers/notice_comment/notice_comment_controller.dart';
-import 'package:pyc/screens/notice/components/notice_appbar.dart';
 import 'package:pyc/screens/notice/notice_update_screen.dart';
 
 //https://blog.naver.com/PostView.nhn?blogId=getinthere&logNo=221845651741
@@ -19,63 +19,21 @@ class NoticeDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final NoticeController noticeController = Get.find<NoticeController>();
-    final NoticeDetailController detailController = Get.find<NoticeDetailController>();
+    final NoticeDetailController noticeDetailController = Get.find<NoticeDetailController>();
+    const int goList = 2; // close dialog -> go list screen
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: getNoticeAppBar(
+      appBar: getDefaultAppBar(
+        title: '공지사항',
         actions: [
           IconButton(
-            onPressed: () {
-              final controller = Get.find<NoticeDetailController>();
-              if (controller.isLoading) {
-                showSnackbar('요청 실패', '공지사항이 로딩 된 후 시도해주세요.');
-                return;
-              }
-              Get.toNamed(NoticeUpdateScreen.routeName, arguments: {
-                'id': controller.id,
-                'title': controller.title,
-                'content': controller.content,
-              });
-            },
-            icon: SvgPicture.asset(
-              'assets/icons/pencil_icon.svg',
-              width: kDefaultValue * 2,
-              color: kTextWhiteColor,
-            ),
+            onPressed: onClickEditButton(noticeDetailController),
+            icon: SvgPicture.asset('assets/icons/pencil_icon.svg'),
           ),
           IconButton(
-            onPressed: () {
-              Get.dialog(
-                AlertDialog(
-                  title: Text('정말로 삭제하시겠습니까?'),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        await noticeController.delete(detailController.targetId);
-                        await noticeController.refetch();
-                        Get.close(2); // close dialog -> go list
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: kPrimaryColor,
-                      ),
-                      child: Text('삭제'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => Get.back(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: kTextGreyColor,
-                      ),
-                      child: Text('취소'),
-                    ),
-                  ],
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.close_outlined,
-              size: kDefaultValue * 2,
-              color: kTextWhiteColor,
-            ),
+            onPressed: onClickDeleteButton(noticeDetailController, noticeController, goList),
+            icon: const Icon(Icons.close_outlined),
           ),
         ],
       ),
@@ -254,6 +212,53 @@ class NoticeDetailScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  VoidCallback onClickEditButton(NoticeDetailController controller) {
+    return () {
+      if (controller.isLoading) {
+        showSnackbar('요청 실패', '공지사항이 로딩 된 후 시도해주세요.');
+        return;
+      }
+      Get.toNamed(
+        NoticeUpdateScreen.routeName,
+        arguments: {
+          'id': controller.id,
+          'title': controller.title,
+          'content': controller.content,
+        },
+      );
+    };
+  }
+
+  VoidCallback onClickDeleteButton(NoticeDetailController detailController, NoticeController noticeController, int closeTimes) {
+    return () {
+      Get.dialog(
+        AlertDialog(
+          title: const Text('정말로 삭제하시겠습니까?'),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                await noticeController.delete(detailController.targetId);
+                await noticeController.refetch();
+                Get.close(closeTimes); // close dialog -> go list
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: kPrimaryColor,
+              ),
+              child: const Text('삭제'),
+            ),
+            ElevatedButton(
+              onPressed: () => Get.back(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: kTextGreyColor,
+              ),
+              child: const Text('취소'),
+            ),
+          ],
+        ),
+      );
+    };
   }
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/validator/validator.dart';
+import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/button/default_buttons.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/notice/notice_upsert.controller.dart';
@@ -17,17 +18,7 @@ class NoticeWriteScreen extends StatelessWidget {
     final NoticeController noticeController = Get.find<NoticeController>();
     return GetBuilder<NoticeUpserController>(
       builder: (controller) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: kPrimaryColor,
-          centerTitle: true,
-          title: const Text(
-            '등록하기',
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+        appBar: getDefaultAppBar(title: '등록하기'),
         body: Container(
           padding: const EdgeInsets.symmetric(
             horizontal: kDefaultValue,
@@ -51,7 +42,7 @@ class NoticeWriteScreen extends StatelessWidget {
                   ),
                   kHalfHeightSizeBox,
                   TextFormField(
-                    maxLines: 1,
+                    maxLines: 2,
                     decoration: const InputDecoration(
                       hintText: '공지사항의 제목을 입력해주세요.',
                       focusedBorder: OutlineInputBorder(

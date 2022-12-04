@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
+import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/screens/notice/components/list/notice_content.dart';
@@ -18,18 +19,12 @@ class NoticeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kSecondaryColor,
-      appBar: getNoticeAppBar(
-        actions: [
-          IconButton(
-            onPressed: () => Get.toNamed(NoticeWriteScreen.routeName),
-            icon: SvgPicture.asset(
-              'assets/icons/pencil_icon.svg',
-              width: kDefaultValue * 2,
-              color: kTextWhiteColor,
-            ),
-          ),
-        ],
-      ),
+      appBar: getDefaultAppBar(title: '공지사항', actions: [
+        IconButton(
+          onPressed: () => Get.toNamed(NoticeWriteScreen.routeName),
+          icon: SvgPicture.asset('assets/icons/pencil_icon.svg'),
+        ),
+      ]),
       body: RefreshIndicator(
         color: kPrimaryColor,
         onRefresh: () => Get.find<NoticeController>().refetch(),

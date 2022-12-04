@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/validator/validator.dart';
+import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/button/default_buttons.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/notice/notice_detail_controller.dart';
@@ -18,17 +19,7 @@ class NoticeUpdateScreen extends StatelessWidget {
     final NoticeDetailController noticeDetailController = Get.find<NoticeDetailController>();
     final Map<String, dynamic> argument = Get.arguments;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        centerTitle: true,
-        title: const Text(
-          '수정하기',
-          style: TextStyle(
-            fontSize: 22.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      appBar: getDefaultAppBar(title: '수정하기'),
       body: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: kDefaultValue,
