@@ -30,7 +30,6 @@ List<GetPage> routes = [
   GetPage(
     name: NoticeScreen.routeName,
     page: () => const NoticeScreen(),
-    binding: NoticeBinding(),
   ),
   GetPage(
     name: NoticeDetailScreen.routeName,

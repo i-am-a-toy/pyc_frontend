@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pyc/controllers/home/home_controller.dart';
-import 'package:pyc/controllers/notice/index_notice_controller.dart';
+import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/user/fetch_me_controller.dart';
 import 'package:pyc/data/provider/notice_provider.dart';
 import 'package:pyc/data/provider/user_provider.dart';
@@ -26,9 +26,9 @@ class HomeBinding extends Bindings {
     Get.put<FetchMeController>(
       FetchMeController(repo: userRepository),
     );
-    Get.put<IndexNoticeController>(
-      IndexNoticeController(noticeRepository: noticeRepository),
-    );
+    Get.put(NoticeController(
+      noticeRepository: noticeRepository,
+    ));
     Get.put(HomeController());
   }
 }

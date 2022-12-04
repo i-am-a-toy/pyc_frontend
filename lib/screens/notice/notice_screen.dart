@@ -18,12 +18,24 @@ class NoticeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kSecondaryColor,
-      appBar: getDefaultAppBar(title: '공지사항', actions: [
-        IconButton(
-          onPressed: () => Get.toNamed(NoticeUpsertScreen.createRoute),
-          icon: SvgPicture.asset('assets/icons/pencil_icon.svg'),
+      //appbar
+      appBar: getDefaultAppBar(
+        title: '공지사항',
+        actions: [
+          IconButton(
+            onPressed: () => Get.toNamed(NoticeUpsertScreen.createRoute),
+            icon: SvgPicture.asset('assets/icons/pencil_icon.svg'),
+          ),
+        ],
+        leading: IconButton(
+          onPressed: _onClickLeadingButton,
+          icon: const Icon(
+            Icons.arrow_back_ios_outlined,
+            size: kDefaultValue * 1.2,
+          ),
         ),
-      ]),
+      ),
+      //body
       body: RefreshIndicator(
         color: kPrimaryColor,
         onRefresh: () => Get.find<NoticeController>().refetch(),
@@ -46,5 +58,10 @@ class NoticeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _onClickLeadingButton() async {
+    Get.find<NoticeController>().refetch();
+    Get.back();
   }
 }
