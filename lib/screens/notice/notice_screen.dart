@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
@@ -7,6 +8,7 @@ import 'package:pyc/screens/notice/components/list/notice_content.dart';
 import 'package:pyc/screens/notice/components/list/notice_no_content.dart';
 import 'package:pyc/screens/notice/components/notice_appbar.dart';
 import 'package:pyc/screens/notice/components/notice_drop_down.dart';
+import 'package:pyc/screens/notice/notice_write_screen.dart';
 
 class NoticeScreen extends StatelessWidget {
   static const String routeName = '/notice';
@@ -16,7 +18,18 @@ class NoticeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kSecondaryColor,
-      appBar: getNoticeAppBar(onTap: () {}),
+      appBar: getNoticeAppBar(
+        actions: [
+          IconButton(
+            onPressed: () => Get.toNamed(NoticeWriteScreen.routeName),
+            icon: SvgPicture.asset(
+              'assets/icons/pencil_icon.svg',
+              width: kDefaultValue * 2,
+              color: kTextWhiteColor,
+            ),
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         color: kPrimaryColor,
         onRefresh: () => Get.find<NoticeController>().refetch(),

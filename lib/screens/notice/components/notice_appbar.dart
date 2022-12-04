@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:pyc/common/constants/constants.dart';
 
-PreferredSizeWidget getNoticeAppBar({VoidCallback? onTap}) {
+PreferredSizeWidget getNoticeAppBar({required List<Widget> actions}) {
   return AppBar(
     title: const Text(
       '공지사항',
@@ -13,15 +12,15 @@ PreferredSizeWidget getNoticeAppBar({VoidCallback? onTap}) {
     ),
     centerTitle: true,
     backgroundColor: kPrimaryColor,
-    actions: [
-      IconButton(
-        onPressed: onTap,
-        icon: SvgPicture.asset(
-          'assets/icons/pencil_icon.svg',
-          width: kDefaultValue * 2,
-          color: kTextWhiteColor,
-        ),
-      )
-    ],
+    actions: actions,
   );
 }
+
+// IconButton(
+//         onPressed: onTap,
+//         icon: SvgPicture.asset(
+//           'assets/icons/pencil_icon.svg',
+//           width: kDefaultValue * 2,
+//           color: kTextWhiteColor,
+//         ),
+//       ),

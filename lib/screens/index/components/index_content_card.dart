@@ -21,7 +21,6 @@ class IndexContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.only(bottom: kDefaultValue / 2),
       width: double.infinity,
@@ -34,57 +33,52 @@ class IndexContentCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: kPrimaryColor,
-                maxRadius: 24.0,
-                child: avatarChild,
-              ),
-              kWidthSizeBox,
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: size.width * 0.5,
-                    child: Text(
-                      content,
-                      style: const TextStyle(
-                        overflow: TextOverflow.ellipsis,
-                        color: kPrimaryColor,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+        children: <Widget>[
+          CircleAvatar(
+            maxRadius: 24.0,
+            backgroundColor: kPrimaryColor,
+            child: avatarChild,
+          ),
+          kWidthSizeBox,
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  content,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: kPrimaryColor,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  kQuarterHeightSizedBox,
-                  if (subContent != null)
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
+                ),
+                kQuarterHeightSizedBox,
+                if (subContent != null)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        subContent!,
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      kQuarterWidthSizedBox,
+                      if (thirdContent != null)
                         Text(
-                          subContent!,
+                          thirdContent!,
                           style: const TextStyle(
-                            fontSize: 14.0,
+                            fontSize: 12.0,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        kQuarterWidthSizedBox,
-                        if (thirdContent != null)
-                          Text(
-                            thirdContent!,
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                      ],
-                    )
-                ],
-              ),
-            ],
+                    ],
+                  ),
+              ],
+            ),
           ),
           if (subContent != null)
             IconButton(

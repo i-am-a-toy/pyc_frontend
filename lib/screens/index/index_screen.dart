@@ -1,7 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/date/date.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
@@ -13,7 +11,6 @@ import 'package:pyc/screens/index/components/card/index_content_icon.dart';
 import 'package:pyc/screens/index/components/drawer/index_drawer.dart';
 import 'package:pyc/screens/index/components/index_attendance.dart';
 import 'package:pyc/screens/index/components/index_content_card.dart';
-import 'package:pyc/screens/index/components/index_new_face_card.dart';
 import 'package:pyc/screens/index/components/index_user_profile.dart';
 import 'package:pyc/screens/index/components/index_user_search.dart';
 import 'package:pyc/screens/index/components/layout/index_layout.dart';
@@ -30,9 +27,7 @@ class IndexScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: getIndexAppbar(),
       drawer: GetBuilder<FetchMeController>(
-        builder: (controller) => LoadingOverlay(
-            isLoading: controller.isLoading,
-            child: IndexDrawer(size: size, name: controller.name)),
+        builder: (controller) => LoadingOverlay(isLoading: controller.isLoading, child: IndexDrawer(size: size, name: controller.name)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: kDefaultValue),
@@ -151,31 +146,31 @@ class IndexScreen extends StatelessWidget {
                 ],
               ),
             ),
-            kHeightSizeBox,
-            //새친구 소개
-            IndexLayout(
-              title: '열방 New Face',
-              goContent: () {},
-              child: CarouselSlider.builder(
-                itemCount: 2,
-                itemBuilder: (context, index, realIndex) {
-                  return IndexNewFaceCard(
-                    avatarChild: Image.asset('assets/images/test_user.png'),
-                    comeDate: DateFormat('yyyy.MM.dd').format(
-                      DateTime.now(),
-                    ),
-                    name: '이우길',
-                    weekly: 2,
-                  );
-                },
-                options: CarouselOptions(
-                  height: 190.0,
-                  padEnds: false,
-                  autoPlay: true,
-                ),
-              ),
-            ),
-            kHeightSizeBox,
+            // kHeightSizeBox,
+            // //새친구 소개
+            // IndexLayout(
+            //   title: '열방 New Face',
+            //   goContent: () {},
+            //   child: CarouselSlider.builder(
+            //     itemCount: 2,
+            //     itemBuilder: (context, index, realIndex) {
+            //       return IndexNewFaceCard(
+            //         avatarChild: Image.asset('assets/images/test_user.png'),
+            //         comeDate: DateFormat('yyyy.MM.dd').format(
+            //           DateTime.now(),
+            //         ),
+            //         name: '이우길',
+            //         weekly: 2,
+            //       );
+            //     },
+            //     options: CarouselOptions(
+            //       height: 190.0,
+            //       padEnds: false,
+            //       autoPlay: true,
+            //     ),
+            //   ),
+            // ),
+            // kHeightSizeBox,
           ],
         ),
       ),

@@ -25,6 +25,21 @@ class NoticeDetailController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    await fetch();
+    _isLoading = false;
+    update();
+  }
+
+  Future<void> refetch() async {
+    _isLoading = true;
+    update();
+
+    await fetch();
+    _isLoading = false;
+    update();
+  }
+
+  Future<void> fetch() async {
     NoticeResponse resp = await noticeRepository.findOneById(targetId);
     _id = resp.id;
     _title = resp.title;
@@ -34,8 +49,6 @@ class NoticeDetailController extends GetxController {
     _role = resp.creator.role;
     _createdAt = resp.createdAt;
     _lastModifiedAt = resp.lastModifiedAt;
-    _isLoading = false;
-    update();
   }
 
   bool get isLoading => _isLoading;

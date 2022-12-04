@@ -17,7 +17,6 @@ class NoticeController extends GetxController {
   int _initOffset = 0;
   int _initLimit = kDefaultValue.toInt();
   NoticeListResponse _notices = NoticeListResponse(rows: [], count: 0);
-  bool _isMaxPosition = false;
   bool _hasMore = true;
   SortType _sortType = SortType.desc;
 
@@ -25,7 +24,6 @@ class NoticeController extends GetxController {
   List<String> get items => _items.map((e) => e.displayName).toList();
   SortType get sortType => _sortType;
   NoticeListResponse get notices => _notices;
-  bool get isMaxPosition => _isMaxPosition;
   bool get hasMore => _hasMore;
   ScrollController get scrollController => _scrollController;
 
@@ -64,6 +62,10 @@ class NoticeController extends GetxController {
     }
   }
 
+  Future<void> delete(int id) async {
+    await noticeRepository.delete(id);
+  }
+
   Future<void> refetch() async {
     // fetch loading
     _isLoading = true;
@@ -91,14 +93,9 @@ class NoticeController extends GetxController {
 
   Future<void> _listener() async {
     /// 만약 스크롤이 끝까지 내려가면 해당 이벤트에서 데이터를 얻어온다.
-    /// 맨 마지막을 내리기 전 offset에 default를 더해서 조금 더 빠르게 Loading하기 위해 offset에 값을 더함
-    if (_scrollController.position.maxScrollExtent <
-        _scrollController.offset + kDefaultValue / 2) {
-      // 데이터가 더 이상 없으면 리패칭 금지.
-      if (!_hasMore) return;
-
-      // change MaxPosition
-      _isMaxPosition = true;
+    if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
+      // Data가 있을 수 있기 때문에 _hasMore를 True로 처리
+      _hasMore = true;
       update();
 
       _initOffset += kDefaultValue.toInt();
@@ -109,6 +106,7 @@ class NoticeController extends GetxController {
       _notices.rows.insertAll(_notices.rows.length - 1, resp.rows);
 
       // 더이상 Data가 없을 경우
+      await Future.delayed(const Duration(milliseconds: 500));
       if (resp.rows.length < kDefaultValue.toInt()) _hasMore = false;
       update();
     }

@@ -30,15 +30,13 @@ class OverFlowText extends StatelessWidget {
     return GetBuilder<OverFlowTextController>(
       tag: tag,
       builder: (controller) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             text,
             maxLines: maxLine,
-            overflow: controller.isOverFlow
-                ? TextOverflow.ellipsis
-                : TextOverflow.visible,
+            overflow: controller.isOverFlow ? TextOverflow.ellipsis : TextOverflow.visible,
             style: TextStyle(
               fontSize: fontSize,
               color: fontColor,

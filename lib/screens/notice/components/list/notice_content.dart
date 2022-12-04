@@ -27,6 +27,7 @@ class NoticeContent extends StatelessWidget {
               content: controller.notices.rows[index].content,
               writer: controller.notices.rows[index].creator.name,
               writerImage: controller.notices.rows[index].creator.image,
+              createAt: controller.notices.rows[index].createdAt,
               onTap: () => Get.toNamed(
                 NoticeDetailScreen.routeName,
                 arguments: {
