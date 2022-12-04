@@ -9,7 +9,7 @@ import 'package:pyc/components/seperator/default_divider.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/notice/notice_detail_controller.dart';
 import 'package:pyc/controllers/notice_comment/notice_comment_controller.dart';
-import 'package:pyc/screens/notice/notice_update_screen.dart';
+import 'package:pyc/screens/notice/notice_upsert_screen.dart';
 
 //https://blog.naver.com/PostView.nhn?blogId=getinthere&logNo=221845651741
 class NoticeDetailScreen extends StatelessWidget {
@@ -221,7 +221,7 @@ class NoticeDetailScreen extends StatelessWidget {
         return;
       }
       Get.toNamed(
-        NoticeUpdateScreen.routeName,
+        NoticeUpsertScreen.updateRoute,
         arguments: {
           'id': controller.id,
           'title': controller.title,

@@ -5,27 +5,35 @@ import 'package:pyc/common/utils/validator/validator.dart';
 import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/button/default_buttons.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
+import 'package:pyc/controllers/notice/notice_detail_controller.dart';
 import 'package:pyc/controllers/notice/notice_upsert.controller.dart';
 
-class NoticeWriteScreen extends StatelessWidget {
-  static const String routeName = '/notice_write';
-
-  const NoticeWriteScreen({super.key});
+class NoticeUpsertScreen extends StatelessWidget {
+  static const String updateRoute = '/notice_update';
+  static const String createRoute = '/notice_create';
+  final String appBarTitle;
+  final String buttonTitle;
+  const NoticeUpsertScreen({
+    super.key,
+    required this.appBarTitle,
+    required this.buttonTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final NoticeController noticeController = Get.find<NoticeController>();
-    return GetBuilder<NoticeUpserController>(
-      builder: (controller) => Scaffold(
-        appBar: getDefaultAppBar(title: '등록하기'),
-        body: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: kDefaultValue,
-            vertical: kDefaultValue * 2,
-          ),
-          width: double.infinity,
-          child: SingleChildScrollView(
+    final Map<String, dynamic>? argument = Get.arguments;
+    return Scaffold(
+      appBar: getDefaultAppBar(title: appBarTitle),
+      body: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: kDefaultValue,
+          vertical: kDefaultValue * 2,
+        ),
+        width: double.infinity,
+        child: GetBuilder<NoticeUpserController>(
+          builder: (controller) => SingleChildScrollView(
             child: Form(
               key: formKey,
               child: Column(
@@ -42,6 +50,7 @@ class NoticeWriteScreen extends StatelessWidget {
                   ),
                   kHalfHeightSizeBox,
                   TextFormField(
+                    initialValue: argument?['title'],
                     maxLines: 2,
                     decoration: const InputDecoration(
                       hintText: '공지사항의 제목을 입력해주세요.',
@@ -62,7 +71,7 @@ class NoticeWriteScreen extends StatelessWidget {
                         fontSize: 14.0,
                       ),
                     ),
-                    onSaved: (val) => {controller.updateTitle(val!)},
+                    onSaved: (val) => controller.updateTitle(val!),
                     validator: requiredStringValidator,
                   ),
                   kHeightSizeBox,
@@ -76,6 +85,7 @@ class NoticeWriteScreen extends StatelessWidget {
                   ),
                   kHalfHeightSizeBox,
                   TextFormField(
+                    initialValue: argument?['content'],
                     maxLines: 10,
                     decoration: const InputDecoration(
                       hintText: '새로운 소식을 입력해주세요.',
@@ -96,7 +106,7 @@ class NoticeWriteScreen extends StatelessWidget {
                         fontSize: 14.0,
                       ),
                     ),
-                    onSaved: (val) => {controller.updateContent(val!)},
+                    onSaved: (val) => controller.updateContent(val!),
                     validator: requiredStringValidator,
                   ),
                   kHeightSizeBox,
@@ -104,11 +114,16 @@ class NoticeWriteScreen extends StatelessWidget {
                     onPress: () async {
                       if (!defaultFormValidator(formKey)) return;
                       formKey.currentState!.save();
-                      await controller.write();
+                      argument != null
+                          ? {
+                              await controller.modifiy(argument['id'] as int),
+                              await Get.find<NoticeDetailController>().refetch(),
+                            }
+                          : await controller.write();
                       await noticeController.refetch();
                       Get.back();
                     },
-                    title: '등록',
+                    title: buttonTitle,
                   )
                 ],
               ),

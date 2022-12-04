@@ -8,8 +8,7 @@ import 'package:pyc/screens/home/home_screen.dart';
 import 'package:pyc/screens/login/login_screen.dart';
 import 'package:pyc/screens/notice/notice_detail_screen.dart';
 import 'package:pyc/screens/notice/notice_screen.dart';
-import 'package:pyc/screens/notice/notice_update_screen.dart';
-import 'package:pyc/screens/notice/notice_write_screen.dart';
+import 'package:pyc/screens/notice/notice_upsert_screen.dart';
 import 'package:pyc/screens/splash/splash_screen.dart';
 
 List<GetPage> routes = [
@@ -39,13 +38,13 @@ List<GetPage> routes = [
     binding: NoticeDetailBinding(),
   ),
   GetPage(
-    name: NoticeWriteScreen.routeName,
-    page: () => const NoticeWriteScreen(),
+    name: NoticeUpsertScreen.updateRoute,
+    page: () => const NoticeUpsertScreen(appBarTitle: '수정하기', buttonTitle: '수정'),
     binding: NoticeUpsertBinding(),
   ),
   GetPage(
-    name: NoticeUpdateScreen.routeName,
-    page: () => const NoticeUpdateScreen(),
+    name: NoticeUpsertScreen.createRoute,
+    page: () => const NoticeUpsertScreen(appBarTitle: '등록하기', buttonTitle: '등록'),
     binding: NoticeUpsertBinding(),
-  )
+  ),
 ];
