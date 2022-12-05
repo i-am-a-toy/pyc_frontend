@@ -50,25 +50,27 @@ class DefaultAvatarContent extends StatelessWidget {
                 ),
               ),
               kQuarterHeightSizedBox,
-              Row(
-                children: [
-                  Text(
-                    content,
-                    style: const TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w400,
-                    ),
+              RichText(
+                overflow: overflow ?? TextOverflow.visible,
+                text: TextSpan(
+                  text: '$content ',
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400,
+                    color: kTextBlackColor,
                   ),
-                  kQuarterWidthSizedBox,
-                  if (subContent != null)
-                    Text(
-                      subContent!,
-                      style: const TextStyle(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w400,
+                  children: [
+                    if (subContent != null)
+                      TextSpan(
+                        text: subContent!,
+                        style: const TextStyle(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w400,
+                          color: kTextBlackColor,
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
