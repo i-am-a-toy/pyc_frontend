@@ -15,7 +15,8 @@ class NoticeUpserController extends GetxController {
   String get content => _content;
 
   void updateTitle(String title) {
-    _title = title.trim();
+    // 공지사항 Title에서의 개행은 띄어쓰기로 변환
+    _title = title.trim().replaceAll('\n', ' ');
   }
 
   void updateContent(String content) {
