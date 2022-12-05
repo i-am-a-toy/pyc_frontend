@@ -83,39 +83,8 @@ class IndexScreen extends StatelessWidget {
                 await Get.find<NoticeController>().refetch();
                 Get.toNamed(NoticeScreen.routeName);
               },
-              child: GetBuilder<NoticeController>(
-                builder: (controller) => Column(
-                  children: [
-                    if (controller.notices.count != 0) // for 문을 돌리면 로딩 되기 전 해당 컴포넌트를 띄우기 때문에 Error 발생
-                      for (int i = 0; i < showCardCount; i++)
-                        IndexContentCard(
-                          // avatarChild: const Icon(
-                          avatarChild: getIndexContentCardIcon(
-                            Icons.campaign_outlined,
-                          ),
-                          title: controller.notices.rows[i].title,
-                          content: '작성자 | ${controller.notices.rows[i].creator.name}',
-                          subContent: getDifferceTime(controller.notices.rows[i].createdAt),
-                          goTo: () {
-                            Get.toNamed(
-                              NoticeDetailScreen.routeName,
-                              arguments: {
-                                "targetId": controller.notices.rows[i].id,
-                                "autoFocus": false,
-                              },
-                            );
-                          },
-                        ),
-                    if (controller.notices.count == 0)
-                      IndexContentCard(
-                        title: '등록 된 공지사항이 없습니다.',
-                        avatarChild: getIndexContentCardIcon(
-                          Icons.campaign_outlined,
-                        ),
-                        content: '공지사항을 등록해주세요.',
-                      ),
-                  ],
-                ),
+              child: const NoticeList(
+                showCardCount: showCardCount,
               ),
             ),
             kHalfHeightSizeBox,
@@ -166,6 +135,53 @@ class IndexScreen extends StatelessWidget {
             // kHeightSizeBox,
           ],
         ),
+      ),
+    );
+  }
+}
+
+class NoticeList extends StatelessWidget {
+  const NoticeList({
+    Key? key,
+    required this.showCardCount,
+  }) : super(key: key);
+
+  final int showCardCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<NoticeController>(
+      builder: (controller) => Column(
+        children: [
+          if (controller.notices.count != 0) // for 문을 돌리면 로딩 되기 전 해당 컴포넌트를 띄우기 때문에 Error 발생
+            for (int i = 0; i < showCardCount; i++)
+              IndexContentCard(
+                // avatarChild: const Icon(
+                avatarChild: getIndexContentCardIcon(
+                  Icons.campaign_outlined,
+                ),
+                title: controller.notices.rows[i].title,
+                content: '작성자 | ${controller.notices.rows[i].creator.name}',
+                subContent: getDifferceTime(controller.notices.rows[i].createdAt),
+                goTo: () {
+                  Get.toNamed(
+                    NoticeDetailScreen.routeName,
+                    arguments: {
+                      "targetId": controller.notices.rows[i].id,
+                      "autoFocus": false,
+                    },
+                  );
+                },
+              ),
+          if (controller.notices.count == 0)
+            IndexContentCard(
+              title: '등록 된 공지사항이 없습니다.',
+              avatarChild: getIndexContentCardIcon(
+                Icons.campaign_outlined,
+              ),
+              content: '공지사항을 등록해주세요.',
+            ),
+        ],
       ),
     );
   }
