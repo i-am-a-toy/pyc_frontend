@@ -16,7 +16,7 @@ class LoadingOverlay extends StatelessWidget {
     if (isLoading) {
       return const Center(
         child: CircularProgressIndicator(
-          color: kHintTextColor,
+          color: kPrimaryColor,
         ),
       );
     }

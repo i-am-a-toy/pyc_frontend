@@ -12,10 +12,10 @@ class NoticeController extends GetxController {
   final List<SortType> _items = [SortType.desc, SortType.asc];
   final ScrollController _scrollController = ScrollController();
   NoticeController({required this.noticeRepository});
+  final int _initLimit = kDefaultValue.toInt();
 
   bool _isLoading = true;
   int _initOffset = 0;
-  int _initLimit = kDefaultValue.toInt();
   NoticeListResponse _notices = NoticeListResponse(rows: [], count: 0);
   bool _hasMore = true;
   SortType _sortType = SortType.desc;
@@ -49,7 +49,6 @@ class NoticeController extends GetxController {
     // fetch loading
     _isLoading = true;
     _initOffset = 0;
-    _initLimit = kDefaultValue.toInt();
     update();
 
     try {
@@ -69,11 +68,11 @@ class NoticeController extends GetxController {
   Future<void> refetch() async {
     // fetch loading
     _isLoading = true;
+    _hasMore = true;
     update();
 
     try {
       _initOffset = 0;
-      _initLimit = 20;
       _sortType = SortType.desc;
       _notices = await _fetch(_initOffset, _initLimit);
       _isLoading = false;
@@ -99,7 +98,6 @@ class NoticeController extends GetxController {
       update();
 
       _initOffset += kDefaultValue.toInt();
-      _initLimit += kDefaultValue.toInt();
 
       // fetch & append
       final resp = await _fetch(_initLimit, _initOffset);

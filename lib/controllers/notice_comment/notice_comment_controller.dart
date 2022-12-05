@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/snackbar/snackbar.dart';
 import 'package:pyc/data/model/notice_comment/notice_comment_list_response.dart';
+import 'package:pyc/data/model/notice_comment/notice_comment_response.dart';
 import 'package:pyc/data/repository/notice_comment_repository.dart';
 
 class NoticeCommentController extends GetxController {
   final int noticeId;
   final NoticeCommentRepository noticeCommentRepository;
+  final _initLimit = kDefaultValue ~/ 4;
   NoticeCommentController({
     required this.noticeCommentRepository,
     required this.noticeId,
@@ -15,23 +17,22 @@ class NoticeCommentController extends GetxController {
 
   bool _isLoading = true;
   int _initOffset = 0;
-  int _initLimit = kDefaultValue.toInt();
-  bool _hasMore = false;
-  NoticeCommentListResponse _noticeComments = NoticeCommentListResponse(
-    rows: [],
-    count: 0,
-  );
+  bool _hasMore = true;
+  List<NoticeCommentResponse> _comments = [];
+  int _count = 0;
 
   bool get isLoding => _isLoading;
   bool get hasMore => _hasMore;
-  NoticeCommentListResponse get noticeComments => _noticeComments;
+  int get count => _count;
+  List<NoticeCommentResponse> get comments => _comments;
 
   @override
   void onInit() async {
     super.onInit();
     try {
-      await fetch(noticeId, _initOffset, _initLimit);
-      if (_noticeComments.count > kDefaultValue.toInt()) _hasMore = true;
+      final resp = await fetch(noticeId, _initOffset, _initLimit);
+      _comments = resp.rows;
+      _count = resp.count;
       _isLoading = false;
       update();
     } catch (e) {
@@ -39,12 +40,32 @@ class NoticeCommentController extends GetxController {
     }
   }
 
-  Future<void> fetch(int noticeId, int offset, int limit) async {
-    _noticeComments = await noticeCommentRepository.findComments(
+  Future<void> getMore() async {
+    if (!_hasMore) return;
+    try {
+      _isLoading = true;
+      update();
+
+      _initOffset += kDefaultValue ~/ 4;
+      final resp = await fetch(noticeId, _initOffset, _initLimit);
+
+      _comments = [...resp.rows, ...comments];
+      _isLoading = false;
+      update();
+    } catch (e) {
+      _handingError(e);
+    }
+  }
+
+  Future<NoticeCommentListResponse> fetch(int noticeId, int offset, int limit) async {
+    final noticeComments = await noticeCommentRepository.findComments(
       noticeId: noticeId,
       offset: offset,
       limit: limit,
     );
+    noticeComments.rows.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    if (noticeComments.rows.length < kDefaultValue ~/ 4) _hasMore = false;
+    return noticeComments;
   }
 
   void _handingError(Object e) {
