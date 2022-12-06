@@ -13,6 +13,7 @@ class NoticeDetailController extends GetxController {
   });
 
   bool _isLoading = true;
+  bool _isBottomSheetActice = false;
   int _id = 0;
   String _title = '';
   String _content = '';
@@ -27,6 +28,11 @@ class NoticeDetailController extends GetxController {
     super.onInit();
     await fetch();
     _isLoading = false;
+    update();
+  }
+
+  toggleBottomSheet() {
+    _isBottomSheetActice = !_isBottomSheetActice;
     update();
   }
 
@@ -52,6 +58,7 @@ class NoticeDetailController extends GetxController {
   }
 
   bool get isLoading => _isLoading;
+  bool get isBottomSheetActice => _isBottomSheetActice;
   int get id => _id;
   String get title => _title;
   String get content => _content;

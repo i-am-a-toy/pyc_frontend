@@ -26,6 +26,7 @@ class NoticeDetailScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      // appbar
       appBar: getDefaultAppBar(
         title: '공지사항',
         actions: [
@@ -39,13 +40,81 @@ class NoticeDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      // bottomSheet:
+      bottomSheet: GetBuilder<NoticeDetailController>(
+        builder: (controller) {
+          // child:
+          return !controller.isBottomSheetActice
+              ? SizedBox(
+                  width: double.infinity,
+                  height: kDefaultValue * 4,
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      top: kDefaultValue / 2,
+                      bottom: kDefaultValue,
+                      left: kDefaultValue,
+                      right: kDefaultValue,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Color(0xffF2F2F2),
+                      borderRadius: BorderRadius.all(Radius.circular(kDefaultValue * 2)),
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        controller.toggleBottomSheet();
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: SizedBox(
+                              child: Wrap(
+                                children: const <Widget>[
+                                  TextField(
+                                    autofocus: true,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: 'Enter a search term',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ).whenComplete(() => controller.toggleBottomSheet());
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: kDefaultValue / 1.5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
+                            CircleAvatar(
+                              maxRadius: kDefaultValue,
+                              child: Icon(Icons.calendar_month),
+                            ),
+                            kHalfWidthSizedBox,
+                            Text(
+                              '댓글을 남겨주세요.',
+                              style: TextStyle(
+                                color: kTextGreyColor,
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox();
+        },
+      ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               kHeightSizeBox,
+              // notice content
               GetBuilder<NoticeDetailController>(
                 builder: (controller) => Padding(
                   padding: const EdgeInsets.symmetric(
@@ -78,70 +147,70 @@ class NoticeDetailScreen extends StatelessWidget {
               kHalfHeightSizeBox,
               getDefaultDivider(width: kDefaultValue * 0.4),
               kHeightSizeBox,
-              // notice Comment count
-              GetBuilder<NoticeCommentController>(
-                builder: (controller) => LoadingOverlay(
-                  isLoading: controller.isLoding,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: kDefaultValue),
-                    child: Text(
-                      '댓글 ${controller.count}개',
-                      style: const TextStyle(
-                        color: kTextGreyColor,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              kHeightSizeBox,
+              // notice Comment
               GetBuilder<NoticeCommentController>(
                 builder: (controller) => LoadingOverlay(
                   isLoading: controller.isLoding,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // has more button
-                      if (controller.hasMore)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kDefaultValue),
-                          child: InkWell(
-                            onTap: () async => controller.getMore(),
-                            child: const Text(
-                              '댓글 더보기',
-                              style: TextStyle(
-                                color: kTextBlackColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
-                            ),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: kDefaultValue),
+                        child: Text(
+                          '댓글 ${controller.count}개',
+                          style: const TextStyle(
+                            color: kTextGreyColor,
+                            fontSize: 12.0,
                           ),
                         ),
-                      for (int i = 0; i < controller.comments.length; i++)
-                        Column(
-                          children: [
+                      ),
+                      kHeightSizeBox,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // has more button
+                          if (controller.hasMore)
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: kDefaultValue / 2,
-                                horizontal: kDefaultValue,
-                              ),
-                              child: DefaultAvatarContent(
-                                title: controller.comments[i].creator.name,
-                                content: controller.comments[i].comment,
-                                subContent: '\n\n${DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(controller.comments[i].createdAt).toString()}',
-                                avatarImage: controller.comments[i].creator.image,
+                              padding: const EdgeInsets.symmetric(horizontal: kDefaultValue),
+                              child: InkWell(
+                                onTap: () async => controller.getMore(),
+                                child: const Text(
+                                  '댓글 더보기',
+                                  style: TextStyle(
+                                    color: kTextBlackColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
                               ),
                             ),
-                            if (i < controller.comments.length - 1) getDefaultDivider(width: kDefaultValue * 0.1),
-                          ],
-                        ),
-                      kHeightSizeBox,
+                          for (int i = 0; i < controller.comments.length; i++)
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: kDefaultValue / 2,
+                                    horizontal: kDefaultValue,
+                                  ),
+                                  child: DefaultAvatarContent(
+                                    title: controller.comments[i].creator.name,
+                                    content: controller.comments[i].comment,
+                                    subContent: '\n\n${DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(controller.comments[i].createdAt).toString()}',
+                                    avatarImage: controller.comments[i].creator.image,
+                                  ),
+                                ),
+                                if (i < controller.comments.length - 1) getDefaultDivider(width: kDefaultValue * 0.1),
+                              ],
+                            ),
+                          const SizedBox(height: kDefaultValue * 2),
+                        ],
+                      ),
                     ],
                   ),
                 ),
               ),
+              const SizedBox(height: kDefaultValue * 2),
             ],
           ),
         ),
