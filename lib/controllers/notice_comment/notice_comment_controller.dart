@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/snackbar/snackbar.dart';
-import 'package:pyc/data/model/notice_comment/notice_comment_list_response.dart';
-import 'package:pyc/data/model/notice_comment/notice_comment_response.dart';
+import 'package:pyc/data/model/notice_comment/response/notice_comment_list_response.dart';
+import 'package:pyc/data/model/notice_comment/response/notice_comment_response.dart';
 import 'package:pyc/data/repository/notice_comment_repository.dart';
 
 class NoticeCommentController extends GetxController {
@@ -66,6 +66,13 @@ class NoticeCommentController extends GetxController {
     noticeComments.rows.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     if (noticeComments.rows.length < kDefaultValue ~/ 4) _hasMore = false;
     return noticeComments;
+  }
+
+  Future<void> save(int noticeId, String comment) async {
+    final response = await noticeCommentRepository.saveComment(noticeId: noticeId, comment: comment);
+    _comments.add(response);
+    _count += 1;
+    update();
   }
 
   void _handingError(Object e) {

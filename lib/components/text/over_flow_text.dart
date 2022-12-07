@@ -47,7 +47,10 @@ class OverFlowText extends StatelessWidget {
           if (controller.isOverFlow)
             InkWell(
               onTap: onTap,
-              child: const Text('...더보기'),
+              child: const Text(
+                '...더보기',
+                style: TextStyle(fontSize: 12.0),
+              ),
             ),
         ],
       ),

@@ -1,4 +1,4 @@
-import 'package:pyc/data/model/notice_comment/notice_comment_response.dart';
+import 'package:pyc/data/model/notice_comment/response/notice_comment_response.dart';
 
 class NoticeCommentListResponse {
   final List<NoticeCommentResponse> rows;
@@ -7,8 +7,6 @@ class NoticeCommentListResponse {
   NoticeCommentListResponse({required this.rows, required this.count});
 
   NoticeCommentListResponse.fromJSON(Map<String, dynamic> json)
-      : rows = (json['rows'] as List<dynamic>)
-            .map((e) => NoticeCommentResponse.fromJSON(e))
-            .toList(),
+      : rows = (json['rows'] as List<dynamic>).map((e) => NoticeCommentResponse.fromJSON(e)).toList(),
         count = json['count'];
 }

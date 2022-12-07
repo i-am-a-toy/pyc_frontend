@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/snackbar/snackbar.dart';
+import 'package:pyc/common/utils/validator/validator.dart';
 import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/content/default_avatar_content.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
@@ -11,6 +12,7 @@ import 'package:pyc/components/seperator/default_divider.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/notice/notice_detail_controller.dart';
 import 'package:pyc/controllers/notice_comment/notice_comment_controller.dart';
+import 'package:pyc/controllers/user/fetch_me_controller.dart';
 import 'package:pyc/screens/notice/notice_upsert_screen.dart';
 
 //https://blog.naver.com/PostView.nhn?blogId=getinthere&logNo=221845651741
@@ -20,9 +22,13 @@ class NoticeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController _scrollController = ScrollController();
     final NoticeController noticeController = Get.find<NoticeController>();
     final NoticeDetailController noticeDetailController = Get.find<NoticeDetailController>();
+    GlobalKey<FormState> formKey = GlobalKey<FormState>();
     const int goList = 2; // close dialog -> go list screen
+
+    String comment = '';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -40,77 +46,77 @@ class NoticeDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomSheet: GetBuilder<NoticeDetailController>(
-        builder: (controller) {
-          // child:
-          return !controller.isBottomSheetActice
-              ? SizedBox(
-                  width: double.infinity,
-                  height: kDefaultValue * 4,
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                      top: kDefaultValue / 2,
-                      bottom: kDefaultValue,
-                      left: kDefaultValue,
-                      right: kDefaultValue,
-                    ),
-                    decoration: const BoxDecoration(
-                      color: Color(0xffF2F2F2),
-                      borderRadius: BorderRadius.all(Radius.circular(kDefaultValue * 2)),
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        controller.toggleBottomSheet();
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) => Padding(
-                            padding: MediaQuery.of(context).viewInsets,
-                            child: SizedBox(
-                              child: Wrap(
-                                children: const <Widget>[
-                                  TextField(
-                                    autofocus: true,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Enter a search term',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ).whenComplete(() => controller.toggleBottomSheet());
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: kDefaultValue / 1.5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            CircleAvatar(
-                              maxRadius: kDefaultValue,
-                              child: Icon(Icons.calendar_month),
-                            ),
-                            kHalfWidthSizedBox,
-                            Text(
-                              '댓글을 남겨주세요.',
-                              style: TextStyle(
-                                color: kTextGreyColor,
-                                fontSize: 18.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : const SizedBox();
-        },
+      bottomSheet: Form(
+        key: formKey,
+        child: Container(
+          width: double.infinity,
+          height: kDefaultValue * 4,
+          padding: const EdgeInsets.only(
+            top: kDefaultValue / 2,
+            left: kDefaultValue,
+            right: kDefaultValue,
+          ),
+          child: TextFormField(
+            autofocus: Get.arguments['autoFocus'] as bool,
+            validator: (val) {
+              return val == '' ? '' : null;
+            },
+            onSaved: (val) {
+              comment = val!.trim();
+            },
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kDefaultValue / 2),
+                child: CircleAvatar(
+                  backgroundColor: kPrimaryColor,
+                  backgroundImage: NetworkImage(Get.find<FetchMeController>().image),
+                ),
+              ),
+              suffixIcon: InkWell(
+                onTap: () async {
+                  if (!formKey.currentState!.validate()) return;
+                  formKey.currentState!.save();
+                  await Get.find<NoticeCommentController>().save(noticeDetailController.id, comment);
+                  _scrollController.animateTo(
+                    _scrollController.position.maxScrollExtent,
+                    duration: const Duration(microseconds: 1000),
+                    curve: Curves.easeOut,
+                  );
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  formKey.currentState!.reset();
+                },
+                child: SvgPicture.asset(
+                  'assets/icons/send_icon.svg',
+                  color: kPrimaryColor,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
+                borderRadius: BorderRadius.circular(40),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
+                borderRadius: BorderRadius.circular(40),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 2.0),
+                borderRadius: BorderRadius.circular(40),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 2.0),
+                borderRadius: BorderRadius.circular(40),
+              ),
+            ),
+          ),
+        ),
       ),
+
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Column(
             children: <Widget>[
               kHeightSizeBox,
@@ -265,3 +271,72 @@ class NoticeDetailScreen extends StatelessWidget {
     };
   }
 }
+
+// bottomSheet: GetBuilder<NoticeDetailController>(
+      //   builder: (controller) {
+      //     // child:
+      //     return !controller.isBottomSheetActice
+      //         ? SizedBox(
+      //             width: double.infinity,
+      //             height: kDefaultValue * 4,
+      //             child: Container(
+      //               margin: const EdgeInsets.only(
+      //                 top: kDefaultValue / 2,
+      //                 bottom: kDefaultValue,
+      //                 left: kDefaultValue,
+      //                 right: kDefaultValue,
+      //               ),
+      //               decoration: const BoxDecoration(
+      //                 color: Color(0xffF2F2F2),
+      //                 borderRadius: BorderRadius.all(Radius.circular(kDefaultValue * 2)),
+      //               ),
+      //               child: InkWell(
+      //                 onTap: () {
+      //                   controller.toggleBottomSheet();
+      //                   showModalBottomSheet(
+      //                     context: context,
+      //                     builder: (context) => Padding(
+      //                       padding: MediaQuery.of(context).viewInsets,
+      //                       child: SizedBox(
+      //                         child: Wrap(
+      //                           children: const <Widget>[
+      //                             TextField(
+      //                               autofocus: true,
+      //                               decoration: InputDecoration(
+      //                                 border: InputBorder.none,
+      //                                 hintText: 'Enter a search term',
+      //                               ),
+      //                             ),
+      //                           ],
+      //                         ),
+      //                       ),
+      //                     ),
+      //                   ).whenComplete(() => controller.toggleBottomSheet());
+      //                 },
+      //                 child: Padding(
+      //                   padding: const EdgeInsets.symmetric(horizontal: kDefaultValue / 1.5),
+      //                   child: Row(
+      //                     mainAxisAlignment: MainAxisAlignment.start,
+      //                     crossAxisAlignment: CrossAxisAlignment.center,
+      //                     children: const [
+      //                       CircleAvatar(
+      //                         maxRadius: kDefaultValue,
+      //                         child: Icon(Icons.calendar_month),
+      //                       ),
+      //                       kHalfWidthSizedBox,
+      //                       Text(
+      //                         '댓글을 남겨주세요.',
+      //                         style: TextStyle(
+      //                           color: kTextGreyColor,
+      //                           fontSize: 18.0,
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ),
+      //               ),
+      //             ),
+      //           )
+      //         : const SizedBox();
+      //   },
+      // ),
