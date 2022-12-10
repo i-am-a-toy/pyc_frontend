@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
-import 'package:pyc/common/utils/date/date.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/user/fetch_me_controller.dart';
 import 'package:pyc/screens/index/components/appbar/index_appbar.dart';
-import 'package:pyc/screens/index/components/card/index_content_icon.dart';
+import 'package:pyc/screens/index/components/content/index_notice_list.dart';
 import 'package:pyc/screens/index/components/drawer/index_drawer.dart';
 import 'package:pyc/screens/index/components/index_attendance.dart';
 import 'package:pyc/screens/index/components/index_content_card.dart';
 import 'package:pyc/screens/index/components/index_user_profile.dart';
 import 'package:pyc/screens/index/components/index_user_search.dart';
 import 'package:pyc/screens/index/components/layout/index_layout.dart';
-import 'package:pyc/screens/notice/notice_detail_screen.dart';
 import 'package:pyc/screens/notice/notice_screen.dart';
 
 class IndexScreen extends StatelessWidget {
@@ -22,7 +20,7 @@ class IndexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    const int showCardCount = 3;
+    const int cardCount = 3;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -79,12 +77,19 @@ class IndexScreen extends StatelessWidget {
             //공자시항
             IndexLayout(
               title: '공지사항',
-              goContent: () async {
-                await Get.find<NoticeController>().refetch();
+              goContent: () {
                 Get.toNamed(NoticeScreen.routeName);
+                Get.find<NoticeController>().refetch();
               },
-              child: const NoticeList(
-                showCardCount: showCardCount,
+              child: GetBuilder<NoticeController>(
+                builder: (controller) => LoadingOverlay(
+                  isLoading: controller.isLoading,
+                  child: IndexNoticeList(
+                    cardCount: cardCount,
+                    rows: controller.notices,
+                    count: controller.count,
+                  ),
+                ),
               ),
             ),
             kHalfHeightSizeBox,
@@ -135,53 +140,6 @@ class IndexScreen extends StatelessWidget {
             // kHeightSizeBox,
           ],
         ),
-      ),
-    );
-  }
-}
-
-class NoticeList extends StatelessWidget {
-  const NoticeList({
-    Key? key,
-    required this.showCardCount,
-  }) : super(key: key);
-
-  final int showCardCount;
-
-  @override
-  Widget build(BuildContext context) {
-    return GetBuilder<NoticeController>(
-      builder: (controller) => Column(
-        children: [
-          if (controller.notices.count != 0) // for 문을 돌리면 로딩 되기 전 해당 컴포넌트를 띄우기 때문에 Error 발생
-            for (int i = 0; i < showCardCount; i++)
-              IndexContentCard(
-                // avatarChild: const Icon(
-                avatarChild: getIndexContentCardIcon(
-                  Icons.campaign_outlined,
-                ),
-                title: controller.notices.rows[i].title,
-                content: '작성자 | ${controller.notices.rows[i].creator.name}',
-                subContent: getDifferceTime(controller.notices.rows[i].createdAt),
-                goTo: () {
-                  Get.toNamed(
-                    NoticeDetailScreen.routeName,
-                    arguments: {
-                      "targetId": controller.notices.rows[i].id,
-                      "autoFocus": false,
-                    },
-                  );
-                },
-              ),
-          if (controller.notices.count == 0)
-            IndexContentCard(
-              title: '등록 된 공지사항이 없습니다.',
-              avatarChild: getIndexContentCardIcon(
-                Icons.campaign_outlined,
-              ),
-              content: '공지사항을 등록해주세요.',
-            ),
-        ],
       ),
     );
   }

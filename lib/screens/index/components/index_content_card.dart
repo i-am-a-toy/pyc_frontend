@@ -44,14 +44,15 @@ class IndexContentCard extends StatelessWidget {
               avatarChild: avatarChild,
             ),
           ),
-          IconButton(
-            onPressed: goTo,
-            icon: const Icon(
-              Icons.keyboard_arrow_right_outlined,
-              size: 32.0,
-              color: kPrimaryColor,
+          if (goTo != null)
+            IconButton(
+              onPressed: goTo,
+              icon: const Icon(
+                Icons.keyboard_arrow_right_outlined,
+                size: 32.0,
+                color: kPrimaryColor,
+              ),
             ),
-          ),
         ],
       ),
     );

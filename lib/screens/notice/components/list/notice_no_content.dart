@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pyc/common/constants/constants.dart';
 
+/// NoticeNoContent
+///
+/// 공지사항의 List가 없는 경우 보여질 Widget 추 후 공통컴포넌트로 빠질 수 있음.
 class NoticeNoContent extends StatelessWidget {
-  final String content = '등록된 공지사항이 없습니다.';
-  const NoticeNoContent({super.key});
+  final String content;
+  const NoticeNoContent({
+    super.key,
+    required this.content,
+  });
 
   @override
   Widget build(BuildContext context) {

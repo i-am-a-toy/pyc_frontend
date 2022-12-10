@@ -1,6 +1,9 @@
 import 'package:pyc/data/model/creator/creator_dto.dart';
 import 'package:pyc/data/model/last_modifier/last_modifier_dto.dart';
 
+/// NoticeResponse
+///
+/// 공지사항 조회를 하였을 때 서버로 부터 응답을 받는 ResponseBody
 class NoticeResponse {
   final int id;
   final String title;
