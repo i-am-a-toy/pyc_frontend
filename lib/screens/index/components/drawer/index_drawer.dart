@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
-import 'package:pyc/screens/index/components/index_drawer_list_title.dart';
+import 'package:pyc/screens/index/components/drawer/index_drawer_list_title.dart';
+import 'package:pyc/screens/notice/notice_screen.dart';
 
 class IndexDrawer extends StatelessWidget {
   final Size size;
@@ -73,7 +75,10 @@ class IndexDrawer extends StatelessWidget {
               IndexDrawerListTitle(
                 icon: Icons.notifications,
                 title: '공지사항',
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  Get.toNamed(NoticeScreen.routeName);
+                },
               ),
               IndexDrawerListTitle(
                 icon: Icons.logout,
