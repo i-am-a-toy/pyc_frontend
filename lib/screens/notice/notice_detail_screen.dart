@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/snackbar/snackbar.dart';
-import 'package:pyc/common/utils/validator/validator.dart';
 import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/content/default_avatar_content.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
@@ -13,6 +13,7 @@ import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/notice/notice_detail_controller.dart';
 import 'package:pyc/controllers/notice_comment/notice_comment_controller.dart';
 import 'package:pyc/controllers/user/fetch_me_controller.dart';
+import 'package:pyc/screens/notice/notice_update_comment_screen.dart';
 import 'package:pyc/screens/notice/notice_upsert_screen.dart';
 
 //https://blog.naver.com/PostView.nhn?blogId=getinthere&logNo=221845651741
@@ -22,7 +23,7 @@ class NoticeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ScrollController _scrollController = ScrollController();
+    final ScrollController scrollController = ScrollController();
     final NoticeController noticeController = Get.find<NoticeController>();
     final NoticeDetailController noticeDetailController = Get.find<NoticeDetailController>();
     GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -78,10 +79,10 @@ class NoticeDetailScreen extends StatelessWidget {
                   if (!formKey.currentState!.validate()) return;
                   formKey.currentState!.save();
                   await Get.find<NoticeCommentController>().save(noticeDetailController.id, comment);
-                  _scrollController.animateTo(
-                    _scrollController.position.maxScrollExtent,
-                    duration: const Duration(microseconds: 1000),
-                    curve: Curves.easeOut,
+                  scrollController.animateTo(
+                    scrollController.position.maxScrollExtent,
+                    duration: const Duration(microseconds: 10000),
+                    curve: Curves.fastOutSlowIn,
                   );
                   FocusManager.instance.primaryFocus?.unfocus();
                   formKey.currentState!.reset();
@@ -114,9 +115,12 @@ class NoticeDetailScreen extends StatelessWidget {
       ),
 
       body: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+          Slidable.of(context)?.close();
+        },
         child: SingleChildScrollView(
-          controller: _scrollController,
+          controller: scrollController,
           child: Column(
             children: <Widget>[
               kHeightSizeBox,
@@ -171,46 +175,90 @@ class NoticeDetailScreen extends StatelessWidget {
                         ),
                       ),
                       kHeightSizeBox,
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // has more button
-                          if (controller.hasMore)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: kDefaultValue),
-                              child: InkWell(
-                                onTap: () async => controller.getMore(),
-                                child: const Text(
-                                  '댓글 더보기',
-                                  style: TextStyle(
-                                    color: kTextBlackColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
+                      SlidableAutoCloseBehavior(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // has more button
+                            if (controller.hasMore)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: kDefaultValue),
+                                child: InkWell(
+                                  onTap: () async {
+                                    controller.getMore();
+                                  },
+                                  child: const Text(
+                                    '댓글 더보기',
+                                    style: TextStyle(
+                                      color: kTextBlackColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.0,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          for (int i = 0; i < controller.comments.length; i++)
-                            Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: kDefaultValue / 2,
-                                    horizontal: kDefaultValue,
-                                  ),
-                                  child: DefaultAvatarContent(
-                                    title: controller.comments[i].creator.name,
-                                    content: controller.comments[i].comment,
-                                    subContent: '\n\n${DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(controller.comments[i].createdAt).toString()}',
-                                    avatarImage: controller.comments[i].creator.image,
-                                  ),
+                            for (int i = 0; i < controller.comments.length; i++)
+                              Slidable(
+                                enabled: Get.find<FetchMeController>().id == controller.comments[i].createdBy,
+                                key: UniqueKey(),
+                                endActionPane: ActionPane(
+                                  motion: const ScrollMotion(),
+                                  children: [
+                                    // A SlidableAction can have an icon and/or a label.
+                                    SlidableAction(
+                                      onPressed: (ctx) {
+                                        Get.toNamed(
+                                          NoticeUpdateCommentScreen.routeName,
+                                          arguments: {
+                                            'id': controller.comments[i].id,
+                                            'comment': controller.comments[i].comment,
+                                          },
+                                        );
+                                      },
+                                      backgroundColor: kPrimaryColor,
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.edit_note_outlined,
+                                      label: 'Modifiy',
+                                    ),
+                                    SlidableAction(
+                                      autoClose: false,
+                                      onPressed: (ctx) {
+                                        Slidable.of(ctx)?.dismiss(
+                                          curve: Curves.fastOutSlowIn,
+                                          ResizeRequest(const Duration(milliseconds: 300), () async {
+                                            await controller.delete(controller.comments[i].id, i);
+                                          }),
+                                        );
+                                      },
+                                      backgroundColor: Colors.red.shade600,
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.delete,
+                                      label: 'Delete',
+                                    ),
+                                  ],
                                 ),
-                                if (i < controller.comments.length - 1) getDefaultDivider(width: kDefaultValue * 0.1),
-                              ],
-                            ),
-                          const SizedBox(height: kDefaultValue * 2),
-                        ],
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: kDefaultValue / 2,
+                                        horizontal: kDefaultValue,
+                                      ),
+                                      child: DefaultAvatarContent(
+                                        title: controller.comments[i].creator.name,
+                                        content: controller.comments[i].comment,
+                                        subContent: '\n\n${DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(controller.comments[i].createdAt).toString()}',
+                                        avatarImage: controller.comments[i].creator.image,
+                                      ),
+                                    ),
+                                    if (i < controller.comments.length - 1) getDefaultDivider(width: kDefaultValue * 0.1),
+                                  ],
+                                ),
+                              ),
+                            const SizedBox(height: kDefaultValue * 2),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -271,72 +319,3 @@ class NoticeDetailScreen extends StatelessWidget {
     };
   }
 }
-
-// bottomSheet: GetBuilder<NoticeDetailController>(
-      //   builder: (controller) {
-      //     // child:
-      //     return !controller.isBottomSheetActice
-      //         ? SizedBox(
-      //             width: double.infinity,
-      //             height: kDefaultValue * 4,
-      //             child: Container(
-      //               margin: const EdgeInsets.only(
-      //                 top: kDefaultValue / 2,
-      //                 bottom: kDefaultValue,
-      //                 left: kDefaultValue,
-      //                 right: kDefaultValue,
-      //               ),
-      //               decoration: const BoxDecoration(
-      //                 color: Color(0xffF2F2F2),
-      //                 borderRadius: BorderRadius.all(Radius.circular(kDefaultValue * 2)),
-      //               ),
-      //               child: InkWell(
-      //                 onTap: () {
-      //                   controller.toggleBottomSheet();
-      //                   showModalBottomSheet(
-      //                     context: context,
-      //                     builder: (context) => Padding(
-      //                       padding: MediaQuery.of(context).viewInsets,
-      //                       child: SizedBox(
-      //                         child: Wrap(
-      //                           children: const <Widget>[
-      //                             TextField(
-      //                               autofocus: true,
-      //                               decoration: InputDecoration(
-      //                                 border: InputBorder.none,
-      //                                 hintText: 'Enter a search term',
-      //                               ),
-      //                             ),
-      //                           ],
-      //                         ),
-      //                       ),
-      //                     ),
-      //                   ).whenComplete(() => controller.toggleBottomSheet());
-      //                 },
-      //                 child: Padding(
-      //                   padding: const EdgeInsets.symmetric(horizontal: kDefaultValue / 1.5),
-      //                   child: Row(
-      //                     mainAxisAlignment: MainAxisAlignment.start,
-      //                     crossAxisAlignment: CrossAxisAlignment.center,
-      //                     children: const [
-      //                       CircleAvatar(
-      //                         maxRadius: kDefaultValue,
-      //                         child: Icon(Icons.calendar_month),
-      //                       ),
-      //                       kHalfWidthSizedBox,
-      //                       Text(
-      //                         '댓글을 남겨주세요.',
-      //                         style: TextStyle(
-      //                           color: kTextGreyColor,
-      //                           fontSize: 18.0,
-      //                         ),
-      //                       ),
-      //                     ],
-      //                   ),
-      //                 ),
-      //               ),
-      //             ),
-      //           )
-      //         : const SizedBox();
-      //   },
-      // ),

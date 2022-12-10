@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:pyc/data/model/notice_comment/response/notice_comment_list_response.dart';
-import 'package:pyc/data/model/notice_comment/response/notice_comment_response.dart';
 import 'package:pyc/data/provider/notice_comment_provider.dart';
 
 class NoticeCommentRepository extends GetxService {
@@ -17,9 +16,15 @@ class NoticeCommentRepository extends GetxService {
     return response;
   }
 
-  Future<NoticeCommentResponse> saveComment({required int noticeId, required String comment}) async {
-    final result = await provider.saveComment(noticeId, comment);
-    NoticeCommentResponse response = NoticeCommentResponse.fromJSON(result.data);
-    return response;
+  Future<void> saveComment({required int noticeId, required String comment}) async {
+    await provider.saveComment(noticeId, comment);
+  }
+
+  Future<void> updateComment({required int id, required String comment}) async {
+    await provider.updateComment(id, comment);
+  }
+
+  Future<void> deleteComment({required int id}) async {
+    await provider.deleteComment(id);
   }
 }

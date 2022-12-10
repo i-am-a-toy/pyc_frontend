@@ -50,6 +50,7 @@ class NoticeCommentController extends GetxController {
       final resp = await fetch(noticeId, _initOffset, _initLimit);
 
       _comments = [...resp.rows, ...comments];
+      _count = resp.count;
       _isLoading = false;
       update();
     } catch (e) {
@@ -58,6 +59,7 @@ class NoticeCommentController extends GetxController {
   }
 
   Future<NoticeCommentListResponse> fetch(int noticeId, int offset, int limit) async {
+    _hasMore = true;
     final noticeComments = await noticeCommentRepository.findComments(
       noticeId: noticeId,
       offset: offset,
@@ -69,10 +71,38 @@ class NoticeCommentController extends GetxController {
   }
 
   Future<void> save(int noticeId, String comment) async {
-    final response = await noticeCommentRepository.saveComment(noticeId: noticeId, comment: comment);
-    _comments.add(response);
-    _count += 1;
-    update();
+    try {
+      await noticeCommentRepository.saveComment(noticeId: noticeId, comment: comment);
+      _initOffset = 0;
+      final resp = await fetch(noticeId, _initOffset, _initLimit);
+      _comments = resp.rows;
+      _count = resp.count;
+      update();
+    } catch (e) {
+      _handingError(e);
+    }
+  }
+
+  Future<void> updateComment(int id, String changed) async {
+    try {
+      await noticeCommentRepository.updateComment(id: id, comment: changed);
+    } catch (e) {
+      _handingError(e);
+    }
+  }
+
+  Future<void> delete(int targetId, int index) async {
+    try {
+      await noticeCommentRepository.deleteComment(id: targetId);
+      _initOffset = 0;
+      final resp = await fetch(noticeId, _initOffset, _initLimit);
+      _comments = resp.rows;
+      _count = resp.count;
+      update();
+      update();
+    } catch (e) {
+      _handingError(e);
+    }
   }
 
   void _handingError(Object e) {

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pyc/common/libraries/auth_api_client.dart';
 import 'package:pyc/data/model/notice_comment/request/create_comment_request.dart';
-import 'package:pyc/data/model/notice_comment/response/notice_comment_response.dart';
+import 'package:pyc/data/model/notice_comment/request/update_comment_request.dart';
 
 class NoticeCommentProvider {
   Future<Response> findAllComment(
@@ -17,11 +17,24 @@ class NoticeCommentProvider {
     );
   }
 
-  Future<Response> saveComment(int noticeId, String comment) async {
+  Future<void> saveComment(int noticeId, String comment) async {
     final client = await getAuthApiClient();
-    return client.post(
+    await client.post(
       '/api/v1/notice-comments/notices/$noticeId',
       data: CreateCommentRequest(comment).toJson(),
     );
+  }
+
+  Future<void> updateComment(int id, String comment) async {
+    final client = await getAuthApiClient();
+    await client.put(
+      '/api/v1/notice-comments/$id',
+      data: UpdateCommentRequest(comment).toJson(),
+    );
+  }
+
+  Future<void> deleteComment(int id) async {
+    final client = await getAuthApiClient();
+    await client.delete('/api/v1/notice-comments/$id');
   }
 }

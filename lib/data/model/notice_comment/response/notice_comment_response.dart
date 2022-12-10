@@ -7,6 +7,7 @@ class NoticeCommentResponse {
   final String comment;
   final Creator creator;
   final DateTime createdAt;
+  final int createdBy;
   final DateTime lastModifiedAt;
 
   NoticeCommentResponse({
@@ -16,6 +17,7 @@ class NoticeCommentResponse {
     required this.comment,
     required this.creator,
     required this.createdAt,
+    required this.createdBy,
     required this.lastModifiedAt,
   });
 
@@ -27,6 +29,7 @@ class NoticeCommentResponse {
         creator = Creator.fromJSON(
           json['creator'] as Map<String, dynamic>,
         ),
+        createdBy = json['createdBy'],
         createdAt = DateTime.parse(json['createdAt']),
         lastModifiedAt = DateTime.parse(json['lastModifiedAt']);
 }
