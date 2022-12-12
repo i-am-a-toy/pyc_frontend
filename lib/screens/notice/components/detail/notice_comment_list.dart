@@ -12,8 +12,8 @@ class NoticeCommentList extends StatelessWidget {
   final List<NoticeCommentResponse> comments;
   final int count;
   // final void Function(BuildContext)? Function(int, String) modifiy;
-  final void Function(BuildContext)? Function(int, String) modifiy;
-  final void Function(BuildContext)? Function(int) delete;
+  final void Function(int, String) modifiy;
+  final Future<void> Function(BuildContext, int) delete;
 
   const NoticeCommentList({
     super.key,
@@ -41,17 +41,14 @@ class NoticeCommentList extends StatelessWidget {
                 motion: const ScrollMotion(),
                 children: [
                   DefaultSlidableAction(
-                    // onPressed: modifiy(comments[i].id, comments[i].comment),
-                    onPressed: (
-                      ctx,
-                    ) =>
-                        modifiy,
+                    onPressed: (ctx) => modifiy(comments[i].id, comments[i].comment),
                     label: 'Modifiy',
                     icon: Icons.edit_note_outlined,
                     color: kPrimaryColor,
                   ),
                   DefaultSlidableAction(
-                    onPressed: delete(comments[i].id),
+                    autoClose: false,
+                    onPressed: (ctx) => delete(ctx, comments[i].id),
                     label: 'Delete',
                     icon: Icons.delete,
                     color: Colors.red.shade600,

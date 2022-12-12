@@ -87,39 +87,14 @@ class NoticeCommentController extends GetxController {
     }
   }
 
-  void Function(BuildContext)? goUpdateScreen(int id, String comment) {
-    return (BuildContext context) {
-      Get.toNamed(
-        NoticeUpdateCommentScreen.routeName,
-        arguments: {
-          'id': id,
-          'comment': comment,
-        },
-      );
-    };
-  }
-
-  void Function(BuildContext)? goUpdateScreen2(int id, String comment) {
-    return (BuildContext context) => {
-          Get.toNamed(
-            NoticeUpdateCommentScreen.routeName,
-            arguments: {
-              'id': id,
-              'comment': comment,
-            },
-          )
-        };
-  }
-
-  void Function(BuildContext)? delete(int index) {
-    return (BuildContext context) {
-      Slidable.of(context)?.dismiss(
-        curve: Curves.fastOutSlowIn,
-        ResizeRequest(const Duration(milliseconds: 300), () async {
-          await _delete(comments[index].id);
-        }),
-      );
-    };
+  void goUpdateScreen(int id, String comment) {
+    Get.toNamed(
+      NoticeUpdateCommentScreen.routeName,
+      arguments: {
+        'id': id,
+        'comment': comment,
+      },
+    );
   }
 
   Future<void> updateComment(int id, String changed) async {
@@ -130,9 +105,18 @@ class NoticeCommentController extends GetxController {
     }
   }
 
-  Future<void> _delete(int targetId) async {
+  Future<void> deleteSlideEvent(BuildContext context, int id) async {
+    await Slidable.of(context)?.dismiss(
+      curve: Curves.fastOutSlowIn,
+      ResizeRequest(const Duration(milliseconds: 300), () async {
+        await _delete(id);
+      }),
+    );
+  }
+
+  Future<void> _delete(int id) async {
     try {
-      await noticeCommentRepository.deleteComment(id: targetId);
+      await noticeCommentRepository.deleteComment(id: id);
       _initOffset = 0;
       final resp = await fetch(noticeId, _initOffset);
       _comments = resp.rows;

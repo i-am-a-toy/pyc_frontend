@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/snackbar/snackbar.dart';
 import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/button/default_text_button.dart';
-import 'package:pyc/components/content/default_avatar_content.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/components/seperator/default_divider.dart';
-import 'package:pyc/components/slidable/default_slidable_action.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/notice/notice_detail_controller.dart';
 import 'package:pyc/controllers/notice_comment/notice_comment_controller.dart';
@@ -19,7 +16,6 @@ import 'package:pyc/screens/notice/components/detail/notice_comment_count.dart';
 import 'package:pyc/screens/notice/components/detail/notice_comment_list.dart';
 import 'package:pyc/screens/notice/components/detail/notice_content.dart';
 import 'package:pyc/screens/notice/components/detail/notice_detail_bottom_sheet.dart';
-import 'package:pyc/screens/notice/notice_update_comment_screen.dart';
 import 'package:pyc/screens/notice/notice_upsert_screen.dart';
 
 class NoticeDetailScreen extends StatelessWidget {
@@ -132,80 +128,14 @@ class NoticeDetailScreen extends StatelessWidget {
                           ),
                         ),
 
-                      /// Comment List
-                      Builder(
-                        builder: (context) => NoticeCommentList(
-                          userId: Get.find<FetchMeController>().id,
-                          comments: controller.comments,
-                          count: controller.count,
-                          modifiy: controller.goUpdateScreen2,
-                          delete: controller.delete,
-                        ),
-                      )
-                      // SlidableAutoCloseBehavior(
-                      //   child: Column(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       /// Commnet List
-                      //       for (int i = 0; i < controller.comments.length; i++)
-                      //         Slidable(
-                      //           enabled: Get.find<FetchMeController>().id == controller.comments[i].createdBy,
-                      //           key: UniqueKey(),
-                      //           endActionPane: ActionPane(
-                      //             motion: const ScrollMotion(),
-                      //             children: [
-                      //               DefaultSlidableAction(
-                      //                 onPressed: (ctx) {
-                      //                   Get.toNamed(
-                      //                     NoticeUpdateCommentScreen.routeName,
-                      //                     arguments: {
-                      //                       'id': controller.comments[i].id,
-                      //                       'comment': controller.comments[i].comment,
-                      //                     },
-                      //                   );
-                      //                 },
-                      //                 label: 'Modifiy',
-                      //                 icon: Icons.edit_note_outlined,
-                      //                 color: kPrimaryColor,
-                      //               ),
-                      //               DefaultSlidableAction(
-                      //                 onPressed: (ctx) {
-                      //                   Slidable.of(ctx)?.dismiss(
-                      //                     curve: Curves.fastOutSlowIn,
-                      //                     ResizeRequest(const Duration(milliseconds: 300), () async {
-                      //                       await controller.delete(controller.comments[i].id, i);
-                      //                     }),
-                      //                   );
-                      //                 },
-                      //                 label: 'Delete',
-                      //                 icon: Icons.delete,
-                      //                 color: Colors.red.shade600,
-                      //               ),
-                      //             ],
-                      //           ),
-                      //           child: Column(
-                      //             children: [
-                      //               Padding(
-                      //                 padding: const EdgeInsets.symmetric(
-                      //                   vertical: kDefaultValue / 2,
-                      //                   horizontal: kDefaultValue,
-                      //                 ),
-                      //                 child: DefaultAvatarContent(
-                      //                   title: controller.comments[i].creator.name,
-                      //                   content: controller.comments[i].comment,
-                      //                   subContent: '\n\n${DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(controller.comments[i].createdAt).toString()}',
-                      //                   avatarImage: controller.comments[i].creator.image,
-                      //                 ),
-                      //               ),
-                      //               if (i < controller.comments.length - 1) getDefaultDivider(width: kDefaultValue * 0.1),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       const SizedBox(height: kDefaultValue * 2),
-                      //     ],
-                      //   ),
-                      // ),
+                      // Comment List
+                      NoticeCommentList(
+                        userId: Get.find<FetchMeController>().id,
+                        comments: controller.comments,
+                        count: controller.count,
+                        modifiy: controller.goUpdateScreen,
+                        delete: controller.deleteSlideEvent,
+                      ),
                     ],
                   ),
                 ),
