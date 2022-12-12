@@ -10,17 +10,13 @@ class NoticeDetailBinding extends Bindings {
   void dependencies() {
     //service
     final noticeRepository = Get.find<NoticeRepository>();
-    final noticeCommentRepository = Get.put(
-      NoticeCommentRepository(
-        provider: NoticeCommentProvider(),
-      ),
-    );
+    final noticeCommentRepository = Get.put(NoticeCommentRepository(provider: NoticeCommentProvider()));
 
     //controller
     Get.put<NoticeDetailController>(
       NoticeDetailController(
         noticeRepository: noticeRepository,
-        targetId: Get.arguments["targetId"], // get target argument
+        targetId: Get.arguments["targetId"],
         autoFocus: Get.arguments["autoFocus"],
       ),
     );

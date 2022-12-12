@@ -5,17 +5,13 @@ import 'package:pyc/common/constants/constants.dart';
 class NoticeDetailBottomSheet extends StatelessWidget {
   final bool autoFocus;
   final String image;
-  final String hintText;
-  final Future<void> Function(String) writeCommentFunction;
-  final String? Function(String?)? validator;
+  final Future<void> Function(String) saveComment;
 
   const NoticeDetailBottomSheet({
     super.key,
     required this.autoFocus,
     required this.image,
-    required this.validator,
-    required this.writeCommentFunction,
-    required this.hintText,
+    required this.saveComment,
   });
 
   @override
@@ -34,11 +30,9 @@ class NoticeDetailBottomSheet extends StatelessWidget {
           right: kDefaultValue,
         ),
         child: TextFormField(
-          key: UniqueKey(),
-          initialValue: hintText,
           autofocus: autoFocus,
-          validator: validator,
-          onSaved: (val) => comment = val!.trim(),
+          validator: (val) => (val == null || val.trim().isEmpty) ? '' : null,
+          onSaved: (val) => comment = val!,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
             prefixIcon: Padding(
@@ -52,7 +46,7 @@ class NoticeDetailBottomSheet extends StatelessWidget {
               onTap: () async {
                 if (!formKey.currentState!.validate()) return;
                 formKey.currentState!.save();
-                await writeCommentFunction(comment);
+                await saveComment(comment);
                 FocusManager.instance.primaryFocus?.unfocus();
                 formKey.currentState!.reset();
               },
@@ -62,6 +56,8 @@ class NoticeDetailBottomSheet extends StatelessWidget {
                 fit: BoxFit.scaleDown,
               ),
             ),
+
+            /// TODO: 분리
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
               borderRadius: BorderRadius.circular(40),

@@ -1,36 +1,35 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/snackbar/snackbar.dart';
 import 'package:pyc/data/model/notice_comment/response/notice_comment_list_response.dart';
 import 'package:pyc/data/model/notice_comment/response/notice_comment_response.dart';
 import 'package:pyc/data/repository/notice_comment_repository.dart';
+import 'package:pyc/screens/notice/notice_update_comment_screen.dart';
 
 class NoticeCommentController extends GetxController {
   final int noticeId;
   final NoticeCommentRepository noticeCommentRepository;
-  final _initLimit = kDefaultValue ~/ 4;
+  final _initLimit = kDefaultValue ~/ 2;
   NoticeCommentController({
     required this.noticeCommentRepository,
     required this.noticeId,
   });
 
   bool _isLoading = true;
-  int _initOffset = 0;
+  bool _isCommentLoading = false;
   bool _hasMore = true;
   List<NoticeCommentResponse> _comments = [];
   int _count = 0;
-
-  bool get isLoding => _isLoading;
-  bool get hasMore => _hasMore;
-  int get count => _count;
-  List<NoticeCommentResponse> get comments => _comments;
+  int _initOffset = 0;
 
   @override
   void onInit() async {
     super.onInit();
     try {
-      final resp = await fetch(noticeId, _initOffset, _initLimit);
+      final resp = await fetch(noticeId, _initOffset);
       _comments = resp.rows;
       _count = resp.count;
       _isLoading = false;
@@ -43,30 +42,35 @@ class NoticeCommentController extends GetxController {
   Future<void> getMore() async {
     if (!_hasMore) return;
     try {
-      _isLoading = true;
+      _isCommentLoading = true;
       update();
 
-      _initOffset += kDefaultValue ~/ 4;
-      final resp = await fetch(noticeId, _initOffset, _initLimit);
+      _initOffset += kDefaultValue ~/ 2;
+      final resp = await fetch(noticeId, _initOffset);
 
       _comments = [...resp.rows, ...comments];
       _count = resp.count;
-      _isLoading = false;
+      _isCommentLoading = false;
+
+      await Future.delayed(const Duration(milliseconds: 300));
       update();
     } catch (e) {
       _handingError(e);
     }
   }
 
-  Future<NoticeCommentListResponse> fetch(int noticeId, int offset, int limit) async {
+  Future<NoticeCommentListResponse> fetch(
+    int noticeId,
+    int offset,
+  ) async {
     _hasMore = true;
     final noticeComments = await noticeCommentRepository.findComments(
       noticeId: noticeId,
       offset: offset,
-      limit: limit,
+      limit: _initLimit,
     );
     noticeComments.rows.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-    if (noticeComments.rows.length < kDefaultValue ~/ 4) _hasMore = false;
+    if (noticeComments.rows.length < kDefaultValue ~/ 2) _hasMore = false;
     return noticeComments;
   }
 
@@ -74,13 +78,48 @@ class NoticeCommentController extends GetxController {
     try {
       await noticeCommentRepository.saveComment(noticeId: noticeId, comment: comment);
       _initOffset = 0;
-      final resp = await fetch(noticeId, _initOffset, _initLimit);
+      final resp = await fetch(noticeId, _initOffset);
       _comments = resp.rows;
       _count = resp.count;
       update();
     } catch (e) {
       _handingError(e);
     }
+  }
+
+  void Function(BuildContext)? goUpdateScreen(int id, String comment) {
+    return (BuildContext context) {
+      Get.toNamed(
+        NoticeUpdateCommentScreen.routeName,
+        arguments: {
+          'id': id,
+          'comment': comment,
+        },
+      );
+    };
+  }
+
+  void Function(BuildContext)? goUpdateScreen2(int id, String comment) {
+    return (BuildContext context) => {
+          Get.toNamed(
+            NoticeUpdateCommentScreen.routeName,
+            arguments: {
+              'id': id,
+              'comment': comment,
+            },
+          )
+        };
+  }
+
+  void Function(BuildContext)? delete(int index) {
+    return (BuildContext context) {
+      Slidable.of(context)?.dismiss(
+        curve: Curves.fastOutSlowIn,
+        ResizeRequest(const Duration(milliseconds: 300), () async {
+          await _delete(comments[index].id);
+        }),
+      );
+    };
   }
 
   Future<void> updateComment(int id, String changed) async {
@@ -91,14 +130,13 @@ class NoticeCommentController extends GetxController {
     }
   }
 
-  Future<void> delete(int targetId, int index) async {
+  Future<void> _delete(int targetId) async {
     try {
       await noticeCommentRepository.deleteComment(id: targetId);
       _initOffset = 0;
-      final resp = await fetch(noticeId, _initOffset, _initLimit);
+      final resp = await fetch(noticeId, _initOffset);
       _comments = resp.rows;
       _count = resp.count;
-      update();
       update();
     } catch (e) {
       _handingError(e);
@@ -122,4 +160,10 @@ class NoticeCommentController extends GetxController {
     // Internal Service Error or Flutter Error
     showSnackbar('요청 실패', '서버에 문제가 있습니다.\n관리자에게 문의해주세요.');
   }
+
+  bool get isLoding => _isLoading;
+  bool get isCommentLoading => _isCommentLoading;
+  bool get hasMore => _hasMore;
+  int get count => _count;
+  List<NoticeCommentResponse> get comments => _comments;
 }

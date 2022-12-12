@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pyc/common/libraries/auth_api_client.dart';
-import 'package:pyc/data/model/notice_comment/request/create_comment_request.dart';
-import 'package:pyc/data/model/notice_comment/request/update_comment_request.dart';
+import 'package:pyc/data/model/notice_comment/request/create_notice_comment_request.dart';
+import 'package:pyc/data/model/notice_comment/request/update_notice_comment_request.dart';
 
 class NoticeCommentProvider {
   Future<Response> findAllComment(
@@ -21,7 +21,7 @@ class NoticeCommentProvider {
     final client = await getAuthApiClient();
     await client.post(
       '/api/v1/notice-comments/notices/$noticeId',
-      data: CreateCommentRequest(comment).toJson(),
+      data: CreateNoticeCommentRequest(comment).toJson(),
     );
   }
 
@@ -29,7 +29,7 @@ class NoticeCommentProvider {
     final client = await getAuthApiClient();
     await client.put(
       '/api/v1/notice-comments/$id',
-      data: UpdateCommentRequest(comment).toJson(),
+      data: UpdateNoticeCommentRequest(comment).toJson(),
     );
   }
 
