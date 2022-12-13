@@ -30,7 +30,7 @@ class DefaultButton extends StatelessWidget {
         ),
         textStyle: const TextStyle(
           fontSize: 16.0,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.bold,
         ),
       ),
       child: Text(title),

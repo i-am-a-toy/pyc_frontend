@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pyc/common/constants/constants.dart';
+import 'package:pyc/components/button/default_text_button.dart';
 
-class IndexContentLayout extends StatelessWidget {
+class IndexLayout extends StatelessWidget {
   final String title;
   final VoidCallback goContent;
   final Widget child;
 
-  const IndexContentLayout({
+  const IndexLayout({
     Key? key,
     required this.title,
     required this.goContent,
@@ -15,23 +16,14 @@ class IndexContentLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return SizedBox(
-      width: double.infinity,
+      width: size.width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InkWell(
-            onTap: goContent,
-            child: Text(
-              title,
-              style: const TextStyle(
-                color: kPrimaryColor,
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          DefaultTextButton(onTap: goContent, title: title),
           kHalfHeightSizeBox,
           child,
         ],
