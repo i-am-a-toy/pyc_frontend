@@ -58,7 +58,6 @@ class NoticeListCard extends StatelessWidget {
             Expanded(
               child: OverFlowText(
                 text: content,
-                tag: 'notice$index',
               ),
             ),
             kHeightSizeBox,

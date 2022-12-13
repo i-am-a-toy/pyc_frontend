@@ -4,6 +4,7 @@ import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/validator/validator.dart';
 import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/button/default_buttons.dart';
+import 'package:pyc/components/form/default_border_input_field.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/notice/notice_detail_controller.dart';
 import 'package:pyc/controllers/notice/notice_upsert.controller.dart';
@@ -49,30 +50,12 @@ class NoticeUpsertScreen extends StatelessWidget {
                     ),
                   ),
                   kHalfHeightSizeBox,
-                  TextFormField(
-                    initialValue: argument?['title'],
-                    maxLines: 2,
-                    decoration: const InputDecoration(
-                      hintText: '공지사항의 제목을 입력해주세요.',
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 2.0),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 2.0),
-                      ),
-                      isDense: true,
-                      hintStyle: TextStyle(
-                        fontSize: 14.0,
-                      ),
-                    ),
+                  DefaultBorderInputField(
+                    init: argument?['title'],
+                    hint: '공지사항의 제목을 입력해주세요.',
                     onSaved: (val) => controller.updateTitle(val!),
                     validator: requiredStringValidator,
+                    maxLine: 2,
                   ),
                   kHeightSizeBox,
                   const Text(
@@ -84,30 +67,12 @@ class NoticeUpsertScreen extends StatelessWidget {
                     ),
                   ),
                   kHalfHeightSizeBox,
-                  TextFormField(
-                    initialValue: argument?['content'],
-                    maxLines: 10,
-                    decoration: const InputDecoration(
-                      hintText: '새로운 소식을 입력해주세요.',
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 2.0),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 2.0),
-                      ),
-                      isDense: true,
-                      hintStyle: TextStyle(
-                        fontSize: 14.0,
-                      ),
-                    ),
+                  DefaultBorderInputField(
+                    init: argument?['content'],
+                    hint: '새로운 소식을 입력해주세요.',
                     onSaved: (val) => controller.updateContent(val!),
                     validator: requiredStringValidator,
+                    maxLine: 10,
                   ),
                   kHeightSizeBox,
                   DefaultButton(

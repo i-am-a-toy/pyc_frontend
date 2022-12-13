@@ -57,13 +57,19 @@ class NoticeDetailScreen extends StatelessWidget {
 
       /// Bottom Sheet
       bottomSheet: NoticeDetailBottomSheet(
-        autoFocus: Get.arguments['autoFocus'],
-        image: Get.find<FetchMeController>().image,
-        saveComment: (comment) => noticeCommentController.save(
-          noticeDetailController.id,
-          comment,
-        ),
-      ),
+          autoFocus: Get.arguments['autoFocus'],
+          image: Get.find<FetchMeController>().image,
+          saveComment: (comment) async {
+            noticeCommentController.save(
+              noticeDetailController.id,
+              comment,
+            );
+            scrollController.animateTo(
+              scrollController.position.maxScrollExtent,
+              duration: const Duration(microseconds: 1),
+              curve: Curves.fastOutSlowIn,
+            );
+          }),
 
       /// Body
       body: GestureDetector(

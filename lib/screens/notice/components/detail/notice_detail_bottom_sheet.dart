@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pyc/common/constants/constants.dart';
+import 'package:pyc/components/form/default_border_input_field.dart';
 
 class NoticeDetailBottomSheet extends StatelessWidget {
   final bool autoFocus;
@@ -29,50 +30,31 @@ class NoticeDetailBottomSheet extends StatelessWidget {
           left: kDefaultValue,
           right: kDefaultValue,
         ),
-        child: TextFormField(
-          autofocus: autoFocus,
+        child: DefaultBorderInputField(
+          autoFocus: autoFocus,
+          isRounded: true,
           validator: (val) => (val == null || val.trim().isEmpty) ? '' : null,
           onSaved: (val) => comment = val!,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-            prefixIcon: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultValue / 2),
-              child: CircleAvatar(
-                backgroundColor: kPrimaryColor,
-                backgroundImage: NetworkImage(image),
-              ),
+          contentPadding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kDefaultValue / 2),
+            child: CircleAvatar(
+              backgroundColor: kPrimaryColor,
+              backgroundImage: NetworkImage(image),
             ),
-            suffixIcon: InkWell(
-              onTap: () async {
-                if (!formKey.currentState!.validate()) return;
-                formKey.currentState!.save();
-                await saveComment(comment);
-                FocusManager.instance.primaryFocus?.unfocus();
-                formKey.currentState!.reset();
-              },
-              child: SvgPicture.asset(
-                'assets/icons/send_icon.svg',
-                color: kPrimaryColor,
-                fit: BoxFit.scaleDown,
-              ),
-            ),
-
-            /// TODO: 분리
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.red, width: 2.0),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.red, width: 2.0),
-              borderRadius: BorderRadius.circular(40),
+          ),
+          suffixIcon: InkWell(
+            onTap: () async {
+              if (!formKey.currentState!.validate()) return;
+              formKey.currentState!.save();
+              await saveComment(comment);
+              FocusManager.instance.primaryFocus?.unfocus();
+              formKey.currentState!.reset();
+            },
+            child: SvgPicture.asset(
+              'assets/icons/send_icon.svg',
+              color: kPrimaryColor,
+              fit: BoxFit.scaleDown,
             ),
           ),
         ),
