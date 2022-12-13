@@ -6,9 +6,9 @@ import 'package:pyc/screens/notice/components/list/notice_list_no_content.dart';
 import 'package:pyc/screens/notice/components/list/notice_list_card.dart';
 import 'package:pyc/screens/notice/notice_detail_screen.dart';
 
-class NoticeContent extends StatelessWidget {
+class NoticeList extends StatelessWidget {
   final NoticeController controller;
-  const NoticeContent({
+  const NoticeList({
     super.key,
     required this.controller,
   });
@@ -17,28 +17,29 @@ class NoticeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
+        shrinkWrap: true,
         controller: controller.scrollController,
-        itemCount: controller.notices.rows.length + 1,
+        itemCount: controller.notices.length + 1,
         itemBuilder: (context, index) {
-          if (index < controller.notices.rows.length) {
+          if (index < controller.notices.length) {
             return NoticeListCard(
               index: index,
-              title: controller.notices.rows[index].title,
-              content: controller.notices.rows[index].content,
-              writer: controller.notices.rows[index].creator.name,
-              writerImage: controller.notices.rows[index].creator.image,
-              createAt: controller.notices.rows[index].createdAt,
+              title: controller.notices[index].title,
+              content: controller.notices[index].content,
+              writer: controller.notices[index].creator.name,
+              writerImage: controller.notices[index].creator.image,
+              createAt: controller.notices[index].createdAt,
               onTap: () => Get.toNamed(
                 NoticeDetailScreen.routeName,
                 arguments: {
-                  "targetId": controller.notices.rows[index].id,
+                  "targetId": controller.notices[index].id,
                   "autoFocus": false,
                 },
               ),
               commentTap: () => Get.toNamed(
                 NoticeDetailScreen.routeName,
                 arguments: {
-                  "targetId": controller.notices.rows[index].id,
+                  "targetId": controller.notices[index].id,
                   "autoFocus": true,
                 },
               ),

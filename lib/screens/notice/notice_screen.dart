@@ -5,9 +5,9 @@ import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
-import 'package:pyc/screens/notice/components/list/notice_content.dart';
+import 'package:pyc/screens/notice/components/list/notice_list.dart';
 import 'package:pyc/screens/notice/components/list/notice_no_content.dart';
-import 'package:pyc/screens/notice/components/notice_drop_down.dart';
+import 'package:pyc/screens/notice/components/list/notice_drop_down.dart';
 import 'package:pyc/screens/notice/notice_upsert_screen.dart';
 
 class NoticeScreen extends StatelessWidget {
@@ -18,7 +18,8 @@ class NoticeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kSecondaryColor,
-      //appbar
+
+      /// Appbar
       appBar: getDefaultAppBar(
         title: '공지사항',
         actions: [
@@ -28,14 +29,15 @@ class NoticeScreen extends StatelessWidget {
           ),
         ],
         leading: IconButton(
-          onPressed: _onClickLeadingButton,
+          onPressed: () => Get.find<NoticeController>().getBack(),
           icon: const Icon(
             Icons.arrow_back_ios_outlined,
             size: kDefaultValue * 1.2,
           ),
         ),
       ),
-      //body
+
+      /// Body
       body: RefreshIndicator(
         color: kPrimaryColor,
         onRefresh: () => Get.find<NoticeController>().refetch(),
@@ -50,7 +52,11 @@ class NoticeScreen extends StatelessWidget {
               GetBuilder<NoticeController>(
                 builder: (controller) => LoadingOverlay(
                   isLoading: controller.isLoading,
-                  child: controller.notices.count != 0 ? NoticeContent(controller: controller) : const NoticeNoContent(),
+                  child: controller.count != 0
+                      ? NoticeList(controller: controller)
+                      : const NoticeNoContent(
+                          content: '등록된 공지사항이 없습니다.',
+                        ),
                 ),
               ),
             ],
@@ -58,10 +64,5 @@ class NoticeScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _onClickLeadingButton() async {
-    Get.find<NoticeController>().refetch();
-    Get.back();
   }
 }
