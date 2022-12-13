@@ -5,8 +5,6 @@ import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/theme/calendar_theme.dart';
 import 'package:pyc/controllers/calendar/calendar_controller.dart';
 import 'package:pyc/screens/calendar/components/calendar_appbar.dart';
-import 'package:pyc/screens/index/components/index_content_card.dart';
-import 'package:pyc/screens/index/components/index_content_layout.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 // https://github.com/aleksanderwozniak/table_calendar/issues/160#issuecomment-773265340
@@ -97,28 +95,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
             kHeightSizeBox,
             // 이벤트 리스트
-            SizedBox(
-              child: IndexContentLayout(
-                goContent: () {},
-                title: '이벤트',
-                child: SizedBox(
-                  height: 200,
-                  child: ListView(
-                    children: [
-                      IndexContentCard(
-                        avatarChild: const Icon(
-                          Icons.event,
-                        ),
-                        content: '테스트',
-                        subContent: '안녕하세요',
-                        goTo: () {},
-                      ),
-                      kHeightSizeBox,
-                    ],
-                  ),
-                ),
-              ),
-            )
           ],
         ),
       ),
