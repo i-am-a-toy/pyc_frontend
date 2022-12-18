@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/builders/calendar_builder.dart';
@@ -8,23 +6,9 @@ import 'package:pyc/common/theme/calendar_theme.dart';
 import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/calendar/calendar_controller.dart';
+import 'package:pyc/screens/index/components/index_content_card.dart';
+import 'package:pyc/screens/index/components/layout/index_layout.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-// https://github.com/aleksanderwozniak/table_calendar/issues/160#issuecomment-773265340
-class Event {
-  String title;
-
-  Event(this.title);
-}
-
-Map<DateTime, List<Event>> events = {
-  DateTime.utc(2022, 11, 13): [Event('title')],
-  DateTime.utc(2022, 11, 19): [Event('은하생일')],
-};
-
-List<Event> _getEventsForDay(DateTime day) {
-  return events[day] ?? [];
-}
 
 /// CalendarScreen
 ///
@@ -61,6 +45,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       backgroundColor: Colors.white,
       appBar: getDefaultAppBar(title: 'Calendar'),
       body: SingleChildScrollView(
+        physics: const ScrollPhysics(),
         padding: const EdgeInsets.symmetric(
           horizontal: kDefaultValue,
         ),
@@ -86,6 +71,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   calendarBuilders: const CalendarBuilders(
                     dowBuilder: getDowBuilder,
                     markerBuilder: getMarkerBuilder,
+                    selectedBuilder: getSelectedBuilder,
                   ),
 
                   /// select Event
@@ -97,18 +83,46 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     return isSameDay(controller.selectedDay, day);
                   },
 
-                  /// TODO: 달이 변경 되면 월의 이벤트를 불러와 Event를 Update
                   /// 여기서 상태를 변경하여 Calendar를 Rerendering 하게 되면
                   /// eventLoader에서 현재 달+ 이동되는 달 까지의 loop를 돌게된다.
-                  onPageChanged: (focusedDay) {},
+                  onPageChanged: (DateTime focusTime) {
+                    controller.updatePage(focusTime);
+                  },
 
-                  // eventLoader: _getEventsForDay,
                   eventLoader: controller.getEventsForDay,
                 ),
               ),
             ),
-            kHeightSizeBox,
+            kDoubleHeightSizeBox,
+
             // 이벤트 리스트
+            GetBuilder<CalendarController>(
+              builder: (controller) => LoadingOverlay(
+                isLoading: controller.isLoading,
+                child: IndexLayout(
+                  title: '일정',
+                  goContent: () {},
+                  child: SizedBox(
+                    height: 250,
+                    child: ListView(
+                      children: <Widget>[
+                        ...controller.getEventsForDay(controller.selectedDay).map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.only(top: kDefaultValue / 2),
+                                child: IndexContentCard(
+                                  avatarChild: const Icon(Icons.calendar_month),
+                                  title: e.title,
+                                  content: e.content,
+                                ),
+                              ),
+                            ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            kDoubleHeightSizeBox,
           ],
         ),
       ),

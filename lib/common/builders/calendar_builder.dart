@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:pyc/common/constants/constants.dart';
 
@@ -55,21 +53,34 @@ Widget? getMarkerBuilder(
 ) {
   return events.isNotEmpty
       ? Container(
-          width: kDefaultValue,
-          height: kDefaultValue,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+          width: kDefaultValue / 4,
+          height: kDefaultValue / 2,
+          decoration: const BoxDecoration(
+            color: kPrimaryColor,
             shape: BoxShape.circle,
-          ),
-          child: Text(
-            '${events.length}',
-            style: const TextStyle(
-              fontSize: 12.0,
-              color: kTextWhiteColor,
-              fontWeight: FontWeight.w400,
-            ),
           ),
         )
       : null;
+}
+
+Widget? getSelectedBuilder(
+  BuildContext context,
+  DateTime day,
+  DateTime focusedDay,
+) {
+  return Container(
+    width: kDefaultValue * 1.5,
+    alignment: Alignment.center,
+    decoration: const BoxDecoration(
+      color: kPrimaryColor,
+      shape: BoxShape.circle,
+    ),
+    child: Text(
+      day.day.toString(),
+      style: const TextStyle(
+        color: kTextWhiteColor,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
 }
