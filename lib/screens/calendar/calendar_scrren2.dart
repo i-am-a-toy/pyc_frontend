@@ -6,9 +6,14 @@ import 'package:intl/intl.dart';
 import 'package:pyc/common/builders/calendar_builder.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/theme/calendar_theme.dart';
+import 'package:pyc/common/utils/validator/validator.dart';
 import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/content/default_avatar_content.dart';
+import 'package:pyc/components/form/default_border_input_field.dart';
+import 'package:pyc/components/label/default_rounded_label.dart';
+import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/calendar/calendar_controller2.dart';
+import 'package:pyc/screens/calendar/components/calendar_date_form_field.dart';
 import 'package:pyc/screens/index/components/layout/index_layout.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -27,6 +32,8 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
   final DateTime firstDay = DateTime(2022, 1, 1);
   final DateTime lastDay = DateTime(2099, 12, 31);
   final String locale = 'ko-KR';
+  String title = '';
+  String content = '';
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -49,7 +56,7 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
     return Scaffold(
       appBar: getDefaultAppBar(
         title: 'Calendar',
-        actions: _getActions(context),
+        actions: _getActions(),
       ),
       body: SingleChildScrollView(
         physics: const ScrollPhysics(),
@@ -195,10 +202,10 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
     );
   }
 
-  List<Widget> _getActions(BuildContext context) {
+  List<Widget> _getActions() {
     return [
       IconButton(
-        onPressed: () => _showBottomSheetModal(context),
+        onPressed: () => _showBottomSheetModal(),
         icon: const Icon(
           Icons.add_outlined,
           size: kDefaultValue * 1.5,
@@ -207,10 +214,10 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
     ];
   }
 
-  void _showBottomSheetModal(BuildContext context) {
+  void _showBottomSheetModal() {
     showModalBottomSheet(
       context: context,
-      // isScrollControlled: true,
+      isScrollControlled: true,
 
       /// Border Shape
       shape: const RoundedRectangleBorder(
@@ -219,16 +226,118 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
         ),
       ),
 
-      builder: (_) => Form(
+      builder: (context) => Form(
         key: formKey,
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: SizedBox(
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.75,
+            child: GetBuilder<CalendarController2>(
+              builder: (controller) => LoadingOverlay(
+                isLoading: controller.isLoading,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    top: kDefaultValue,
+                    right: kDefaultValue,
+                    left: kDefaultValue,
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          IconButton(
+                            onPressed: () => Navigator.pop(context),
+                            icon: const Icon(
+                              Icons.close_outlined,
+                              color: kPrimaryColor,
+                              size: kDefaultValue * 1.5,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              /// validate
+                              if (!formKey.currentState!.validate()) return;
+                              formKey.currentState!.save();
+                              await controller.addCalendar(title, content);
+                            },
+                            icon: const Icon(
+                              Icons.add_outlined,
+                              color: kPrimaryColor,
+                              size: kDefaultValue * 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      /// Spacer
+                      kHeightSizeBox,
+
+                      /// Title Form
+                      DefaultBorderInputField(
+                        hint: '일정에 제목을 입력해주세요.',
+                        maxLine: 2,
+                        onSaved: (val) => title = val!.trim(),
+                        validator: requiredStringValidator,
+                      ),
+
+                      /// Spacer
+                      kHeightSizeBox,
+
+                      /// Title Form
+                      DefaultBorderInputField(
+                        hint: '일정에 대한 설명을 입력해주세요.',
+                        maxLine: 5,
+                        onSaved: (val) => content = val!.trim(),
+                        validator: requiredStringValidator,
+                      ),
+
+                      /// isAllDay switch
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text('하루종일'),
+                          Switch(
+                            value: controller.isAllDay,
+                            onChanged: controller.toggleIsAllDay,
+                            activeColor: kPrimaryColor,
+                          ),
+                        ],
+                      ),
+                      kHeightSizeBox,
+
+                      /// Start
+                      CalendarDateFormField(
+                        context: context,
+                        title: '시작',
+                        isAllDay: controller.isAllDay,
+                        initialValue: DateTime.now(),
+                        onConfirm: (val) {},
+                      ),
+
+                      /// Spacer
+                      kHeightSizeBox,
+
+                      /// End
+                      CalendarDateFormField(
+                        context: context,
+                        title: '종료',
+                        isAllDay: controller.isAllDay,
+                        initialValue: DateTime.now(),
+                        onConfirm: (val) {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
-    );
+    ).whenComplete(() => Get.find<CalendarController2>().resetBottomSheet());
   }
 }
