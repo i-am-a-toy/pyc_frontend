@@ -20,4 +20,8 @@ extension DateTimeExtension on DateTime {
     final isBefore = date.isBeforeOrEqualTo(toDateTime);
     return isAfter && isBefore;
   }
+
+  DateTime dateOnly() {
+    return DateTime(year, month, day);
+  }
 }

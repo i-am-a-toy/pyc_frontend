@@ -31,8 +31,8 @@ class CalendarResponse {
   CalendarResponse.fromJSON(Map<String, dynamic> json)
       : id = json['id'],
         churchId = json['churchId'],
-        start = DateTime.parse(json['start']),
-        end = DateTime.parse(json['end']),
+        start = DateTime.parse(json['start']).toLocal(),
+        end = DateTime.parse(json['end']).toLocal(),
         isAllDay = json['isAllDay'],
         title = json['title'],
         content = json['content'],
@@ -42,6 +42,6 @@ class CalendarResponse {
         lastModifier = LastModifier.fromJSON(
           json['lastModifier'] as Map<String, dynamic>,
         ),
-        createdAt = DateTime.parse(json['createdAt']),
-        lastModifiedAt = DateTime.parse(json['lastModifiedAt']);
+        createdAt = DateTime.parse(json['createdAt']).toLocal(),
+        lastModifiedAt = DateTime.parse(json['lastModifiedAt']).toLocal();
 }

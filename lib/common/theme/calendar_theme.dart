@@ -34,7 +34,7 @@ CalendarStyle getCalendarStyle() {
     defaultTextStyle: TextStyle(
       fontWeight: FontWeight.bold,
     ),
-    markersAlignment: Alignment.bottomRight,
+    markersAlignment: Alignment.bottomCenter,
     canMarkersOverflow: false,
   );
 }

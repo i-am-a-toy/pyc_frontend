@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/components/button/default_text_button.dart';
 
-class IndexLayout extends StatelessWidget {
+class LabeldContent extends StatelessWidget {
   final String title;
-  final VoidCallback goContent;
   final Widget child;
+  final VoidCallback? goContent;
 
-  const IndexLayout({
+  const LabeldContent({
     Key? key,
     required this.title,
-    required this.goContent,
     required this.child,
+    this.goContent,
   }) : super(key: key);
 
   @override
@@ -23,7 +23,10 @@ class IndexLayout extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DefaultTextButton(onTap: goContent, title: title),
+          DefaultTextButton(
+            onTap: goContent ?? () {},
+            title: title,
+          ),
           kHalfHeightSizeBox,
           child,
         ],

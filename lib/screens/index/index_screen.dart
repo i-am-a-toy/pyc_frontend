@@ -48,7 +48,7 @@ class IndexScreen extends StatelessWidget {
             const IndexUserSearch(leadingIcon: Icons.search_outlined),
             kHeightSizeBox,
             //출석
-            IndexLayout(
+            LabeldContent(
               title: '출석현황',
               goContent: () {},
               child: SizedBox(
@@ -75,7 +75,7 @@ class IndexScreen extends StatelessWidget {
             ),
             kHeightSizeBox,
             //공자시항
-            IndexLayout(
+            LabeldContent(
               title: '공지사항',
               goContent: () {
                 Get.toNamed(NoticeScreen.routeName);
@@ -94,7 +94,7 @@ class IndexScreen extends StatelessWidget {
             ),
             kHalfHeightSizeBox,
             //일정안내
-            IndexLayout(
+            LabeldContent(
               title: '일정 안내',
               goContent: () {},
               child: Column(
