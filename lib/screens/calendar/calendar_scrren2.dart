@@ -10,9 +10,10 @@ import 'package:pyc/common/utils/validator/validator.dart';
 import 'package:pyc/components/appbar/default_appbar.dart';
 import 'package:pyc/components/content/default_avatar_content.dart';
 import 'package:pyc/components/form/default_border_input_field.dart';
-import 'package:pyc/components/label/default_rounded_label.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/calendar/calendar_controller2.dart';
+import 'package:pyc/data/repository/calendar_repository.dart';
+import 'package:pyc/extension/date_time.dart';
 import 'package:pyc/screens/calendar/components/calendar_date_form_field.dart';
 import 'package:pyc/screens/index/components/layout/index_layout.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -40,7 +41,7 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
   @override
   void initState() {
     super.initState();
-    Get.put(CalendarController2());
+    Get.put(CalendarController2(repository: Get.find<CalendarRepository>()));
     log('Init CalendarScreen');
   }
 
@@ -61,10 +62,10 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
       body: SingleChildScrollView(
         physics: const ScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: kDefaultValue),
-        child: GetBuilder<CalendarController2>(
-          builder: (controller) => Column(
-            children: [
-              TableCalendar(
+        child: Column(
+          children: [
+            GetBuilder<CalendarController2>(
+              builder: (controller) => TableCalendar(
                 /// for Scroll
                 availableGestures: AvailableGestures.none,
 
@@ -89,114 +90,37 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                 selectedDayPredicate: (day) {
                   return isSameDay(controller.selectedDay, day);
                 },
+                onPageChanged: controller.updatePage,
+
+                /// show Event
+                eventLoader: controller.getEventsForDay,
               ),
+            ),
 
-              /// Spacer
-              kDoubleHeightSizeBox,
+            /// Spacer
+            kDoubleHeightSizeBox,
 
-              /// Event List
-              LabeldContent(
-                title: '일정',
-                goContent: () {},
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 250,
-                  child: ListView(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
+            /// Event List
+            LabeldContent(
+              title: '일정',
+              child: SizedBox(
+                width: double.infinity,
+                height: 250,
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
+                      child: DefaultAvatarContent(
+                        title: '안녕',
+                        content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
+                        subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                        child: DefaultAvatarContent(
-                          title: '안녕',
-                          content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                          subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -262,8 +186,10 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                             onPressed: () async {
                               /// validate
                               if (!formKey.currentState!.validate()) return;
+
+                              /// save & pop
                               formKey.currentState!.save();
-                              await controller.addCalendar(title, content);
+                              await controller.addCalendar(context, title, content);
                             },
                             icon: const Icon(
                               Icons.add_outlined,
@@ -315,8 +241,8 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                         context: context,
                         title: '시작',
                         isAllDay: controller.isAllDay,
-                        initialValue: DateTime.now(),
-                        onConfirm: (val) {},
+                        initialValue: controller.start,
+                        onConfirm: controller.updateStart,
                       ),
 
                       /// Spacer
@@ -327,8 +253,10 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                         context: context,
                         title: '종료',
                         isAllDay: controller.isAllDay,
-                        initialValue: DateTime.now(),
-                        onConfirm: (val) {},
+                        initialValue: controller.end,
+                        minTime: controller.start,
+                        onConfirm: controller.updateEnd,
+                        validator: (val) => controller.end.isAfterOrEqualTo(val!) ? null : '종료는 시작과 같거나 이 후 시점이여야 합니다.',
                       ),
                     ],
                   ),

@@ -17,7 +17,7 @@ class CalendarRepository extends GetxService {
     return CalendarListResponse.fromJSON(result.data);
   }
 
-  Future<void> createCalendar(CreateCalendarRequest req) async {
+  Future<void> save(CreateCalendarRequest req) async {
     await calendarProvider.createCalendar(req: req);
   }
 }

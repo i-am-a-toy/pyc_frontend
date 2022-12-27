@@ -75,7 +75,7 @@ class CalendarController extends GetxController {
   }
 
   Future<void> createCalendars(String title, String content) async {
-    await repository.createCalendar(
+    await repository.save(
       CreateCalendarRequest(
         title,
         content,
