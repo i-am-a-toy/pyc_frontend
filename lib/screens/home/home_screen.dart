@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyc/controllers/home/home_controller.dart';
-import 'package:pyc/screens/calendar/calendar_screen.dart';
 import 'package:pyc/screens/calendar/calendar_scrren2.dart';
 import 'package:pyc/screens/home/components/home_bottom_navigation_bar.dart';
 import 'package:pyc/screens/index/index_screen.dart';
