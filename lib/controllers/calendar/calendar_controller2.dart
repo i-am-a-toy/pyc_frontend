@@ -82,12 +82,12 @@ class CalendarController2 extends GetxController {
 
     /// Data를 Server로 넘겨주면 DB에서 자동으로 UTC 변환을 하며 -9를 하게 된다.
     await repository.save(CreateCalendarRequest(title, content, _start, _end, _isAllDay));
-
-    final result = await repository.getMonthEvent(_focusDay.year, _focusDay.month);
-    _event = result.toLinkedMap(_focusDay);
-    _count = result.count;
-    update();
-    Navigator.pop(context);
+    await repository.getMonthEvent(_focusDay.year, _focusDay.month).then((result) {
+      _event = result.toLinkedMap(_focusDay);
+      _count = result.count;
+      update();
+      Navigator.pop(context);
+    });
   }
 
   /// addCalendar
@@ -97,23 +97,23 @@ class CalendarController2 extends GetxController {
     log('Hit Update Calendar with id: $id title: $title, content: $content, start:${DateFormat('yyyy-MM-dd').format(_start)}, end:${DateFormat('yyyy-MM-dd').format(_end)}, isAllDay: $_isAllDay');
 
     await repository.update(id, UpdateCalendarRequest(title, content, _start, _end, _isAllDay));
-
-    final result = await repository.getMonthEvent(_focusDay.year, _focusDay.month);
-    _event = result.toLinkedMap(_focusDay);
-    _count = result.count;
-    update();
-    Navigator.pop(context);
+    await repository.getMonthEvent(_focusDay.year, _focusDay.month).then((result) {
+      _event = result.toLinkedMap(_focusDay);
+      _count = result.count;
+      update();
+      Navigator.pop(context);
+    });
   }
 
   Future<void> deleteCalendar(BuildContext context, int id) async {
     log('Hit Delete Calendar with $id');
     await repository.delete(id);
-
-    final result = await repository.getMonthEvent(_focusDay.year, _focusDay.month);
-    _event = result.toLinkedMap(_focusDay);
-    _count = result.count;
-    update();
-    Navigator.pop(context);
+    await repository.getMonthEvent(_focusDay.year, _focusDay.month).then((result) {
+      _event = result.toLinkedMap(_focusDay);
+      _count = result.count;
+      update();
+      Navigator.pop(context);
+    });
   }
 
   /// For Bottom Sheet
