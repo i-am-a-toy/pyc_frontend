@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pyc/common/utils/date/date.dart';
 import 'package:pyc/data/model/calendar/request/create_calendar_request.dart';
 import 'package:pyc/data/model/calendar/response/calendar_response.dart';
 import 'package:pyc/data/repository/calendar_repository.dart';
@@ -113,7 +112,7 @@ class CalendarController extends GetxController {
   }
 
   void resetBottomSheet() {
-    final currentFocusing = getDateOnly(_focusDay).toLocal();
+    final currentFocusing = _focusDay.dateOnly();
     _start = currentFocusing;
     _end = currentFocusing;
     _isAllDay = false;

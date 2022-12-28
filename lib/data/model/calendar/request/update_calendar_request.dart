@@ -1,13 +1,13 @@
 import 'package:pyc/extension/date_time.dart';
 
-class CreateCalendarRequest {
+class UpdateCalendarRequest {
   final String _title;
   final String _content;
   final DateTime _start;
   final DateTime _end;
   final bool _isAllDay;
 
-  CreateCalendarRequest(
+  UpdateCalendarRequest(
     this._title,
     this._content,
     this._start,

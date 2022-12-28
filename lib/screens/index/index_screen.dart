@@ -11,7 +11,7 @@ import 'package:pyc/screens/index/components/index_attendance.dart';
 import 'package:pyc/screens/index/components/index_content_card.dart';
 import 'package:pyc/screens/index/components/index_user_profile.dart';
 import 'package:pyc/screens/index/components/index_user_search.dart';
-import 'package:pyc/screens/index/components/layout/index_layout.dart';
+import 'package:pyc/screens/index/components/layout/labeled_content.dart';
 import 'package:pyc/screens/notice/notice_screen.dart';
 
 class IndexScreen extends StatelessWidget {
@@ -48,7 +48,7 @@ class IndexScreen extends StatelessWidget {
             const IndexUserSearch(leadingIcon: Icons.search_outlined),
             kHeightSizeBox,
             //출석
-            LabeldContent(
+            LabeledContent(
               title: '출석현황',
               goContent: () {},
               child: SizedBox(
@@ -75,7 +75,7 @@ class IndexScreen extends StatelessWidget {
             ),
             kHeightSizeBox,
             //공자시항
-            LabeldContent(
+            LabeledContent(
               title: '공지사항',
               goContent: () {
                 Get.toNamed(NoticeScreen.routeName);
@@ -94,7 +94,7 @@ class IndexScreen extends StatelessWidget {
             ),
             kHalfHeightSizeBox,
             //일정안내
-            LabeldContent(
+            LabeledContent(
               title: '일정 안내',
               goContent: () {},
               child: Column(

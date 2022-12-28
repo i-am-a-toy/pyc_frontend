@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/components/button/default_text_button.dart';
 
-class LabeldContent extends StatelessWidget {
+class LabeledContent extends StatelessWidget {
   final String title;
   final Widget child;
   final VoidCallback? goContent;
 
-  const LabeldContent({
+  const LabeledContent({
     Key? key,
     required this.title,
     required this.child,

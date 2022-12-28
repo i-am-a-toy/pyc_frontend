@@ -56,7 +56,7 @@ class CalendarDateFormField extends FormField<DateTime> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          DateFormat('yyyy년 MM월 dd일').format(initialValue.toLocal()).toString(),
+                          DateFormat('yyyy년 MM월 dd일').format(initialValue).toString(),
                           style: const TextStyle(
                             color: kPrimaryColor,
                             fontSize: 22.0,
@@ -66,7 +66,7 @@ class CalendarDateFormField extends FormField<DateTime> {
                         kWidthSizeBox,
                         if (!isAllDay)
                           Text(
-                            DateFormat('a hh:mm').format(initialValue.toLocal()).toString(),
+                            DateFormat('a hh:mm').format(initialValue).toString(),
                             style: const TextStyle(
                               color: kPrimaryColor,
                               fontWeight: FontWeight.bold,

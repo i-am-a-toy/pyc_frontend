@@ -13,7 +13,7 @@ import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/calendar/calendar_controller.dart';
 import 'package:pyc/data/repository/calendar_repository.dart';
 import 'package:pyc/screens/calendar/components/calendar_date_form_field.dart';
-import 'package:pyc/screens/index/components/layout/index_layout.dart';
+import 'package:pyc/screens/index/components/layout/labeled_content.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -282,7 +282,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   avatarChild: const Icon(Icons.calendar_month_outlined, size: kDefaultValue * 1.5),
                                   title: e.title,
                                   content: e.content,
-                                  subContent: '\n${e.creator.name} / ${DateFormat('yyyy년 MM월 dd일').format(e.createdAt.toLocal()).toString()}',
+                                  subContent:
+                                      '\n${e.creator.name} / ${DateFormat('yyyy년 MM월 dd일').format(e.createdAt.add(const Duration(hours: 9))).toString()}',
                                 ),
                               ),
                             ),

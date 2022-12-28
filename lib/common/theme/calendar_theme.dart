@@ -30,7 +30,7 @@ CalendarStyle getCalendarStyle() {
       color: kPrimaryColor,
       shape: BoxShape.circle,
     ),
-    isTodayHighlighted: false,
+    isTodayHighlighted: true,
     defaultTextStyle: TextStyle(
       fontWeight: FontWeight.bold,
     ),

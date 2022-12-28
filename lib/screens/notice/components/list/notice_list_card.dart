@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pyc/common/constants/constants.dart';
-import 'package:pyc/common/utils/date/date.dart';
+import 'package:pyc/extension/date_time.dart';
 import 'package:pyc/components/content/default_avatar_content.dart';
 import 'package:pyc/components/text/over_flow_text.dart';
 import 'package:pyc/screens/notice/components/list/notice_comment_button.dart';
@@ -52,7 +52,7 @@ class NoticeListCard extends StatelessWidget {
               content: '작성자 | $writer',
               overflow: TextOverflow.ellipsis,
               avatarImage: writerImage,
-              subContent: getDifferceTime(createAt),
+              subContent: createAt.getDifferenceNow(),
             ),
             kHeightSizeBox,
             Expanded(

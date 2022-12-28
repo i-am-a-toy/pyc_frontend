@@ -12,10 +12,11 @@ import 'package:pyc/components/content/default_avatar_content.dart';
 import 'package:pyc/components/form/default_border_input_field.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/calendar/calendar_controller2.dart';
+import 'package:pyc/data/model/calendar/response/calendar_response.dart';
 import 'package:pyc/data/repository/calendar_repository.dart';
 import 'package:pyc/extension/date_time.dart';
 import 'package:pyc/screens/calendar/components/calendar_date_form_field.dart';
-import 'package:pyc/screens/index/components/layout/index_layout.dart';
+import 'package:pyc/screens/index/components/layout/labeled_content.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 /// CalendarScreen2
@@ -83,6 +84,7 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                   dowBuilder: getDowBuilder,
                   markerBuilder: getMarkerBuilder,
                   selectedBuilder: getSelectedBuilder,
+                  todayBuilder: getTodayBuilder,
                 ),
 
                 /// select Event
@@ -98,28 +100,39 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
             ),
 
             /// Spacer
-            kDoubleHeightSizeBox,
+            kHeightSizeBox,
 
             /// Event List
-            LabeldContent(
+            LabeledContent(
               title: '일정',
               child: SizedBox(
                 width: double.infinity,
                 height: 250,
-                child: ListView(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
-                      child: DefaultAvatarContent(
-                        title: '안녕',
-                        content: '가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다',
-                        subContent: '\n\n작성자 / ${DateFormat('yyyy년 MM월 dd일').format(DateTime.now())}',
-                      ),
-                    ),
-                  ],
+                child: GetBuilder<CalendarController2>(
+                  builder: (controller) => ListView(
+                    children: [
+                      ...controller.getEventsForDay(controller.selectedDay).map(
+                            (e) => InkWell(
+                              onTap: () => _showBottomSheetModal(data: e),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: kDefaultValue / 2),
+                                child: DefaultAvatarContent(
+                                  title: e.title,
+                                  content: e.content,
+                                  subContent:
+                                      e.isAllDay ? null : '\n\n${DateFormat('yy-MM-dd').format(e.start)} ~ ${DateFormat('yy-MM-dd').format(e.end)}',
+                                ),
+                              ),
+                            ),
+                          )
+                    ],
+                  ),
                 ),
               ),
             ),
+
+            /// Spacer
+            kDoubleHeightSizeBox,
           ],
         ),
       ),
@@ -138,7 +151,15 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
     ];
   }
 
-  void _showBottomSheetModal() {
+  void _showBottomSheetModal({CalendarResponse? data}) {
+    // Data가 있다면 start, end, isAllDay Update 해주기
+    if (data != null) {
+      CalendarController2 controller = Get.find<CalendarController2>();
+      controller.updateStart(data.start);
+      controller.updateEnd(data.end);
+      controller.toggleIsAllDay(data.isAllDay);
+    }
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -174,29 +195,54 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          IconButton(
-                            onPressed: () => Navigator.pop(context),
-                            icon: const Icon(
-                              Icons.close_outlined,
-                              color: kPrimaryColor,
-                              size: kDefaultValue * 1.5,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              /// validate
-                              if (!formKey.currentState!.validate()) return;
+                          data == null
+                              ? IconButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  icon: const Icon(
+                                    Icons.close_outlined,
+                                    color: kPrimaryColor,
+                                    size: kDefaultValue * 1.5,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: () async => await controller.deleteCalendar(context, data.id),
+                                  icon: const Icon(
+                                    Icons.delete_outline,
+                                    color: kPrimaryColor,
+                                    size: kDefaultValue * 1.5,
+                                  ),
+                                ),
+                          data == null
+                              ? IconButton(
+                                  onPressed: () async {
+                                    /// validate
+                                    if (!formKey.currentState!.validate()) return;
 
-                              /// save & pop
-                              formKey.currentState!.save();
-                              await controller.addCalendar(context, title, content);
-                            },
-                            icon: const Icon(
-                              Icons.add_outlined,
-                              color: kPrimaryColor,
-                              size: kDefaultValue * 1.5,
-                            ),
-                          ),
+                                    /// save & pop
+                                    formKey.currentState!.save();
+                                    await controller.addCalendar(context, title, content);
+                                  },
+                                  icon: const Icon(
+                                    Icons.add_outlined,
+                                    color: kPrimaryColor,
+                                    size: kDefaultValue * 1.5,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: () async {
+                                    /// validate
+                                    if (!formKey.currentState!.validate()) return;
+
+                                    /// save & pop
+                                    formKey.currentState!.save();
+                                    await controller.updateCalendar(context, data.id, title, content);
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit_outlined,
+                                    color: kPrimaryColor,
+                                    size: kDefaultValue * 1.5,
+                                  ),
+                                ),
                         ],
                       ),
 
@@ -207,6 +253,7 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                       DefaultBorderInputField(
                         hint: '일정에 제목을 입력해주세요.',
                         maxLine: 2,
+                        init: data?.title,
                         onSaved: (val) => title = val!.trim(),
                         validator: requiredStringValidator,
                       ),
@@ -218,6 +265,7 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                       DefaultBorderInputField(
                         hint: '일정에 대한 설명을 입력해주세요.',
                         maxLine: 5,
+                        init: data?.content,
                         onSaved: (val) => content = val!.trim(),
                         validator: requiredStringValidator,
                       ),

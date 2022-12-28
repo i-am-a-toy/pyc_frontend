@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pyc/common/utils/date/date.dart';
 import 'package:pyc/data/model/notice/response/notice_response.dart';
+import 'package:pyc/extension/date_time.dart';
 import 'package:pyc/screens/index/components/icon/index_content_icon.dart';
 import 'package:pyc/screens/index/components/index_content_card.dart';
 import 'package:pyc/screens/notice/notice_detail_screen.dart';
@@ -30,7 +30,7 @@ class IndexNoticeList extends StatelessWidget {
               avatarChild: getIndexContentCardIcon(Icons.campaign_outlined),
               title: rows[i].title,
               content: '작성자 | ${rows[i].creator.name}',
-              subContent: getDifferceTime(rows[i].createdAt),
+              subContent: rows[i].createdAt.getDifferenceNow(),
               goTo: () {
                 Get.toNamed(
                   NoticeDetailScreen.routeName,

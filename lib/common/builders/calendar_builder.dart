@@ -84,3 +84,25 @@ Widget? getSelectedBuilder(
     ),
   );
 }
+
+Widget? getTodayBuilder(
+  BuildContext context,
+  DateTime day,
+  DateTime focusedDay,
+) {
+  return Container(
+    width: kDefaultValue * 1.5,
+    alignment: Alignment.center,
+    decoration: const BoxDecoration(
+      color: kPointColor,
+      shape: BoxShape.circle,
+    ),
+    child: Text(
+      day.day.toString(),
+      style: const TextStyle(
+        color: kTextWhiteColor,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
+}
