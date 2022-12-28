@@ -6,18 +6,16 @@ extension DateTimeExtension on DateTime {
   ///
   /// 시간이 인자로 받은 시간과 동일하거나 이후인지 비교해주는 method
   bool isAfterOrEqualTo(DateTime dateTime) {
-    final date = this;
-    final isAtSameMomentAs = dateTime.isAtSameMomentAs(date);
-    return isAtSameMomentAs | date.isAfter(dateTime);
+    final isAtSameMomentAs = dateTime.isAtSameMomentAs(this);
+    return isAtSameMomentAs | isAfter(dateTime);
   }
 
   /// isBeforeOrEqualTo
   ///
   /// 시간이 인자로 받은 시간과 동일하거나 이전인지 비교해주는 method
   bool isBeforeOrEqualTo(DateTime dateTime) {
-    final date = this;
-    final isAtSameMomentAs = dateTime.isAtSameMomentAs(date);
-    return isAtSameMomentAs | date.isBefore(dateTime);
+    final isAtSameMomentAs = dateTime.isAtSameMomentAs(this);
+    return isAtSameMomentAs | isBefore(dateTime);
   }
 
   /// isBetween
@@ -58,5 +56,12 @@ extension DateTimeExtension on DateTime {
   /// 12월인 경우에만 년도에 1을 더해 얻어온다.
   DateTime getLastDayOfMonth() {
     return month < 12 ? DateTime(year, month + 1, 0) : DateTime(year + 1, 1, 0);
+  }
+
+  /// getUtcDateOnly
+  ///
+  /// DateTime.now()를 UTC로 변환
+  DateTime getUtcDateOnly() {
+    return DateTime.utc(year, month, day);
   }
 }

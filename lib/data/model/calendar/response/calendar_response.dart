@@ -31,8 +31,8 @@ class CalendarResponse {
   CalendarResponse.fromJSON(Map<String, dynamic> json)
       : id = json['id'],
         churchId = json['churchId'],
-        start = DateTime.parse(json['start']),
-        end = DateTime.parse(json['end']),
+        start = DateTime.parse(json['start']).add(const Duration(hours: 9)),
+        end = DateTime.parse(json['end']).add(const Duration(hours: 9)),
         isAllDay = json['isAllDay'],
         title = json['title'],
         content = json['content'],

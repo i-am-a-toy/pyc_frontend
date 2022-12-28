@@ -265,7 +265,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 kDoubleHeightSizeBox,
 
                 // 이벤트 리스트
-                LabeldContent(
+                LabeledContent(
                   title: '일정',
                   goContent: () {},
                   child: SizedBox(

@@ -19,8 +19,8 @@ class CreateCalendarRequest {
     return {
       'title': _title.replaceAll('\n', ' '),
       'content': _content.trim(),
-      'start': _isAllDay ? _start.dateOnly().toUtc().toIso8601String() : _start.toUtc().toIso8601String(),
-      'end': _isAllDay ? _end.dateOnly().toUtc().toIso8601String() : _end.toUtc().toIso8601String(),
+      'start': _isAllDay ? _start.dateOnly().toIso8601String() : _start.toIso8601String(),
+      'end': _isAllDay ? _end.dateOnly().toIso8601String() : _end.toIso8601String(),
       'isAllDay': _isAllDay,
     };
   }

@@ -28,11 +28,10 @@ class CalendarListResponse {
     log('create EventMap $year-$month-($monthFirst ~ $monthLastDay)');
     final eventMap = LinkedHashMap<DateTime, List<CalendarResponse>>(equals: isSameDay);
     for (int i = monthFirst; i <= monthLastDay; i++) {
-      final day = DateTime(year, month, i).dateOnly();
-      final event = rows.where((e) => day.isBetween(e.start.dateOnly(), e.end.dateOnly())).toList();
+      final day = DateTime.utc(year, month, i);
+      final event = rows.where((e) => day.isBetween(e.start.getUtcDateOnly(), e.end.getUtcDateOnly())).toList();
       eventMap.addAll({day: event});
     }
-
     return eventMap;
   }
 }

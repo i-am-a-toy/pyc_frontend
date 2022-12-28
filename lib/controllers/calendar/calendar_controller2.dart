@@ -24,8 +24,8 @@ class CalendarController2 extends GetxController {
 
   /// For Bottom Modal
   bool _isAllDay = false;
-  DateTime _start = DateTime.now().dateOnly();
-  DateTime _end = DateTime.now().dateOnly();
+  DateTime _start = DateTime.now().getUtcDateOnly();
+  DateTime _end = DateTime.now().getUtcDateOnly();
 
   @override
   @mustCallSuper
@@ -69,6 +69,7 @@ class CalendarController2 extends GetxController {
   ///
   /// 날짜가 선택되면 해당 날짜에 포함하는 Event의 List를 Return해주면 된다.
   /// day로 요청이 들어오는 건 현재 Calendar page 에서보여지는 전체 날짜이다.
+  /// 인자로는 UTC Date가 들어온다.
   List<CalendarResponse> getEventsForDay(DateTime day) {
     return _event[day] ?? [];
   }
@@ -79,6 +80,7 @@ class CalendarController2 extends GetxController {
   Future<void> addCalendar(BuildContext context, String title, String content) async {
     log('Hit Add Calendar with title: $title, content: $content, start:${DateFormat('yyyy-MM-dd').format(_start)}, end:${DateFormat('yyyy-MM-dd').format(_end)}, isAllDay: $_isAllDay');
 
+    /// Data를 Server로 넘겨주면 DB에서 자동으로 UTC 변환을 하며 -9를 하게 된다.
     await repository.save(CreateCalendarRequest(title, content, _start, _end, _isAllDay));
 
     final result = await repository.getMonthEvent(_focusDay.year, _focusDay.month);
@@ -137,11 +139,10 @@ class CalendarController2 extends GetxController {
   }
 
   void resetBottomSheet() {
-    final currentFocusing = _focusDay.dateOnly();
-    _start = currentFocusing;
-    _end = currentFocusing;
+    _start = _focusDay.getUtcDateOnly();
+    _end = _focusDay.getUtcDateOnly();
     _isAllDay = false;
-    log('Reset Calendar Bottom Sheet State start, end with $currentFocusing');
+    log('Reset Calendar Bottom Sheet State start, end with ${_focusDay.getUtcDateOnly()}');
     update();
   }
 
