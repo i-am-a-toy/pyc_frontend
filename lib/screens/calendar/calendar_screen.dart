@@ -1,23 +1,28 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pyc/extension/date_time.dart';
-import 'package:intl/intl.dart';
-import 'package:pyc/common/builders/calendar_builder.dart';
 import 'package:pyc/common/constants/constants.dart';
-import 'package:pyc/common/theme/calendar_theme.dart';
 import 'package:pyc/common/utils/validator/validator.dart';
-import 'package:pyc/components/appbar/default_appbar.dart';
-import 'package:pyc/components/content/default_avatar_content.dart';
+import 'package:pyc/components/appbar/default_app_bar.dart';
 import 'package:pyc/components/form/default_border_input_field.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/calendar/calendar_controller.dart';
+import 'package:pyc/data/model/calendar/response/calendar_response.dart';
 import 'package:pyc/data/repository/calendar_repository.dart';
+import 'package:pyc/extension/date_time.dart';
 import 'package:pyc/screens/calendar/components/calendar_date_form_field.dart';
+import 'package:pyc/screens/calendar/components/calendar_event_card.dart';
+import 'package:pyc/screens/calendar/components/default_table_calendar.dart';
 import 'package:pyc/screens/index/components/layout/labeled_content.dart';
-import 'package:table_calendar/table_calendar.dart';
 
+/// CalendarScreen
+///
+/// @description: 해당 Widget을 StateFul Widget으로 선언한 이유는 StateWidget의 LifeCycle을 이용하여
+/// Getx의 Controller를 Put/Delete 하기 위함이다.
+/// 일정관리를 할 수 있는 Screen이며 일정에 대한 C,R,U,D가 일어난다.
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({Key? key}) : super(key: key);
+  const CalendarScreen({super.key});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -27,276 +32,268 @@ class _CalendarScreenState extends State<CalendarScreen> {
   final DateTime firstDay = DateTime(2022, 1, 1);
   final DateTime lastDay = DateTime(2099, 12, 31);
   final String locale = 'ko-KR';
+  String title = '';
+  String content = '';
+
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     Get.put(CalendarController(repository: Get.find<CalendarRepository>()));
+    log('Init CalendarScreen');
   }
 
   @override
   void dispose() {
     super.dispose();
     Get.delete<CalendarController>();
+    log('dispose CalendarScreen');
   }
 
   @override
   Widget build(BuildContext context) {
-    String title = '';
-    String content = '';
-
-    GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: getDefaultAppBar(
         title: 'Calendar',
-        actions: [
-          /// for Bottom Sheet
-          IconButton(
-            onPressed: () {
-              /// init Bottom Sheet Start & end
-              Get.find<CalendarController>().resetBottomSheet();
-
-              /// showModalBottomSheet
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-
-                /// Border Shape
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(25.0),
-                  ),
-                ),
-
-                builder: (context) => Form(
-                  key: formKey,
-
-                  /// GestureDetector because close keboard
-                  child: GestureDetector(
-                    onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.75,
-
-                      /// for BottomSheetField
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.only(
-                          top: kDefaultValue,
-                          right: kDefaultValue,
-                          left: kDefaultValue,
-                          bottom: MediaQuery.of(context).viewInsets.bottom,
-                        ),
-
-                        /// BottomSheet Body
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            /// Calendar Modal Header
-                            GetBuilder<CalendarController>(
-                              builder: (controller) => Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  /// Register Bottom Modal
-                                  IconButton(
-                                    onPressed: () => {Navigator.pop(context), controller.resetBottomSheet()},
-                                    icon: const Icon(
-                                      Icons.close_outlined,
-                                      size: kDefaultValue * 1.5,
-                                      color: kTextGreyColor,
-                                    ),
-                                  ),
-
-                                  /// create or update
-                                  IconButton(
-                                    onPressed: () {
-                                      if (!defaultFormValidator(formKey)) return;
-                                      formKey.currentState!.save();
-                                      controller.createCalendars(title, content);
-                                      Navigator.pop(context);
-                                    },
-                                    icon: const Icon(
-                                      Icons.check_circle_outline,
-                                      size: kDefaultValue * 1.5,
-                                      color: kTextGreyColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            kHeightSizeBox,
-
-                            /// title Form
-                            DefaultBorderInputField(
-                              hint: '일정의 제목을 입력해주세요.',
-                              maxLine: 2,
-                              onSaved: (val) => title = val!.trim(),
-                              validator: requiredStringValidator,
-                            ),
-                            kHeightSizeBox,
-
-                            /// content Form
-                            DefaultBorderInputField(
-                              hint: '일정에 대한 세부 내용을 입력해주세요.',
-                              maxLine: 5,
-                              onSaved: (val) => content = val!.trim(),
-                              validator: requiredStringValidator,
-                            ),
-                            kHeightSizeBox,
-
-                            /// isAllDay switch
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Text('하루종일'),
-                                GetBuilder<CalendarController>(
-                                  builder: (controller) => Switch(
-                                    value: controller.isAllDay,
-                                    onChanged: controller.toggleIsAllDay,
-                                    activeColor: kPrimaryColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            kHeightSizeBox,
-
-                            /// start & end
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                /// START
-                                GetBuilder<CalendarController>(
-                                  builder: (controller) => CalendarDateFormField(
-                                    context: context,
-                                    title: '시작',
-                                    isAllDay: controller.isAllDay,
-                                    initialValue: controller.start,
-                                    onConfirm: controller.updateStart,
-                                  ),
-                                ),
-
-                                /// Spacer
-                                kHeightSizeBox,
-
-                                /// END
-                                GetBuilder<CalendarController>(
-                                  builder: (controller) => GetBuilder<CalendarController>(
-                                    builder: (controller) => CalendarDateFormField(
-                                      context: context,
-                                      title: '종료',
-                                      isAllDay: controller.isAllDay,
-                                      initialValue: controller.end,
-                                      onConfirm: controller.updateEnd,
-                                      minTime: controller.start,
-                                      validator: (value) {
-                                        return value!.isAfterOrEqualTo(controller.start) ? null : '종료는 시작과 같거나 이 후 시점이여야 합니다.';
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            kHeightSizeBox,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ).whenComplete(() => Get.find<CalendarController>().resetBottomSheet());
-            },
-            icon: const Icon(
-              Icons.add_outlined,
-              size: kDefaultValue * 1.5,
-            ),
-          ),
-        ],
+        actions: _getActions(),
       ),
       body: SingleChildScrollView(
         physics: const ScrollPhysics(),
-        padding: const EdgeInsets.symmetric(
-          horizontal: kDefaultValue,
-        ),
-        child: GetBuilder<CalendarController>(
-          builder: (controller) => LoadingOverlay(
-            isLoading: controller.isLoading,
-            child: Column(
-              children: [
-                /// Table Calendar
-                TableCalendar(
-                  /// for Scroll
-                  availableGestures: AvailableGestures.none,
+        padding: const EdgeInsets.symmetric(horizontal: kDefaultValue),
+        child: Column(
+          children: [
+            GetBuilder<CalendarController>(
+              builder: (controller) => DefaultTableCalendar(
+                locale: locale,
+                firstDay: firstDay,
+                lastDay: lastDay,
+                focusDay: controller.focusDay,
+                selectedDay: controller.selectedDay,
+                onSelect: controller.selectDay,
+                onPageChanged: controller.updatePage,
+                eventLoader: controller.getEventsForDay,
+              ),
+            ),
 
-                  /// initial Setting
-                  locale: locale,
-                  firstDay: firstDay,
-                  lastDay: lastDay,
-                  focusedDay: controller.focusDay,
-                  daysOfWeekHeight: kDefaultValue,
+            /// Spacer
+            kDoubleHeightSizeBox,
 
-                  /// style
-                  headerStyle: getHeaderStyle(),
-                  calendarStyle: getCalendarStyle(),
-                  calendarBuilders: const CalendarBuilders(
-                    dowBuilder: getDowBuilder,
-                    markerBuilder: getMarkerBuilder,
-                    selectedBuilder: getSelectedBuilder,
-                  ),
-
-                  /// select Event
-                  onDaySelected: (selectedDay, focusedDay) {
-                    controller.select(selectedDay, focusedDay);
-                  },
-                  selectedDayPredicate: (day) {
-                    return isSameDay(controller.selectedDay, day);
-                  },
-
-                  /// 여기서 상태를 변경하여 Calendar를 Rerendering 하게 되면
-                  /// eventLoader에서 현재 달+ 이동되는 달 까지의 loop를 돌게된다.
-                  onPageChanged: (DateTime focusTime) {
-                    controller.updatePage(focusTime);
-                  },
-
-                  eventLoader: controller.getEventsForDay,
-                ),
-                kDoubleHeightSizeBox,
-
-                // 이벤트 리스트
-                LabeledContent(
-                  title: '일정',
-                  goContent: () {},
-                  child: SizedBox(
-                    height: 250,
-                    child: ListView(
-                      children: [
-                        ...controller.getEventsForDay(controller.focusDay).map(
-                              (e) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  // horizontal: kDefaultValue,
-                                  vertical: kDefaultValue / 2,
-                                ),
-                                child: DefaultAvatarContent(
-                                  avatarChild: const Icon(Icons.calendar_month_outlined, size: kDefaultValue * 1.5),
-                                  title: e.title,
-                                  content: e.content,
-                                  subContent:
-                                      '\n${e.creator.name} / ${DateFormat('yyyy년 MM월 dd일').format(e.createdAt.add(const Duration(hours: 9))).toString()}',
-                                ),
-                              ),
+            /// Event List
+            LabeledContent(
+              title: '일정',
+              child: SizedBox(
+                width: double.infinity,
+                height: 250,
+                child: GetBuilder<CalendarController>(
+                  builder: (controller) => ListView(
+                    /// TODO: 초기 처음 Screen으로 들어왔을 때 현재 날짜의 이벤트를 List 뿌려주기
+                    children: [
+                      ...controller.getEventsForDay(controller.selectedDay).map(
+                            (e) => CalendarEventCard(
+                              onTap: () => _showBottomSheetModal(data: e),
+                              title: e.title,
+                              content: e.content,
+                              subContent: e.isAllDay ? null : '\n${e.start.toYYMMDD()} ~ ${e.end.toYYMMDD()}',
                             ),
-                      ],
-                    ),
+                          ),
+                    ],
                   ),
                 ),
-                kDoubleHeightSizeBox,
-              ],
+              ),
+            ),
+
+            /// Spacer
+            kDoubleHeightSizeBox,
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// _getActions
+  ///
+  /// @description: Calendar Widget Appbar에 대한 Action Widget에 대한 List
+  List<Widget> _getActions() {
+    return [
+      IconButton(
+        onPressed: () => _showBottomSheetModal(),
+        icon: const Icon(
+          Icons.add_outlined,
+          size: kDefaultValue * 1.5,
+        ),
+      ),
+    ];
+  }
+
+  /// _showBottomSheetModal
+  ///
+  /// @description: Calendar 일정을 등록, 수정, 삭제를 위한 BottomSheetModal
+  /// 인자로 들어오는 Data가 존재한다면 수정, 삭제에 대한 모달을 보여주고 그렇지 않은 경우 생성 모달을 보여준다.
+  /// 해당 모달이 종료될 때 whenComplete 이벤트를 통해 start, end, isAllDay에 대한 상태는 초기화 된다.
+  void _showBottomSheetModal({CalendarResponse? data}) {
+    // Data가 있다면 start, end, isAllDay Update 해주기
+    if (data != null) {
+      CalendarController controller = Get.find<CalendarController>();
+      controller.updateStart(data.start);
+      controller.updateEnd(data.end);
+      controller.toggleIsAllDay(data.isAllDay);
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+
+      /// Border Shape
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
+      ),
+
+      builder: (context) => Form(
+        key: formKey,
+        child: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: SizedBox(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.75,
+            child: GetBuilder<CalendarController>(
+              builder: (controller) => LoadingOverlay(
+                isLoading: controller.isLoading,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    top: kDefaultValue,
+                    right: kDefaultValue,
+                    left: kDefaultValue,
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          data == null
+                              ? IconButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  icon: const Icon(
+                                    Icons.close_outlined,
+                                    color: kPrimaryColor,
+                                    size: kDefaultValue * 1.5,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: () async => await controller.deleteCalendar(context, data.id),
+                                  icon: const Icon(
+                                    Icons.delete_outline,
+                                    color: kPrimaryColor,
+                                    size: kDefaultValue * 1.5,
+                                  ),
+                                ),
+                          data == null
+                              ? IconButton(
+                                  onPressed: () async {
+                                    /// validate
+                                    if (!formKey.currentState!.validate()) return;
+
+                                    /// save & pop
+                                    formKey.currentState!.save();
+                                    await controller.addCalendar(context, title, content);
+                                  },
+                                  icon: const Icon(
+                                    Icons.add_outlined,
+                                    color: kPrimaryColor,
+                                    size: kDefaultValue * 1.5,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: () async {
+                                    /// validate
+                                    if (!formKey.currentState!.validate()) return;
+
+                                    /// save & pop
+                                    formKey.currentState!.save();
+                                    await controller.updateCalendar(context, data.id, title, content);
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit_outlined,
+                                    color: kPrimaryColor,
+                                    size: kDefaultValue * 1.5,
+                                  ),
+                                ),
+                        ],
+                      ),
+
+                      /// Spacer
+                      kHeightSizeBox,
+
+                      /// Title Form
+                      DefaultBorderInputField(
+                        hint: '일정에 제목을 입력해주세요.',
+                        maxLine: 2,
+                        init: data?.title,
+                        onSaved: (val) => title = val!.trim(),
+                        validator: requiredStringValidator,
+                      ),
+
+                      /// Spacer
+                      kHeightSizeBox,
+
+                      /// Title Form
+                      DefaultBorderInputField(
+                        hint: '일정에 대한 설명을 입력해주세요.',
+                        maxLine: 5,
+                        init: data?.content,
+                        onSaved: (val) => content = val!.trim(),
+                        validator: requiredStringValidator,
+                      ),
+
+                      /// isAllDay switch
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text('하루종일'),
+                          Switch(
+                            value: controller.isAllDay,
+                            onChanged: controller.toggleIsAllDay,
+                            activeColor: kPrimaryColor,
+                          ),
+                        ],
+                      ),
+                      kHeightSizeBox,
+
+                      /// Start
+                      CalendarDateFormField(
+                        context: context,
+                        title: '시작',
+                        isAllDay: controller.isAllDay,
+                        initialValue: controller.start,
+                        onConfirm: controller.updateStart,
+                      ),
+
+                      /// Spacer
+                      kHeightSizeBox,
+
+                      /// End
+                      CalendarDateFormField(
+                        context: context,
+                        title: '종료',
+                        isAllDay: controller.isAllDay,
+                        initialValue: controller.end,
+                        minTime: controller.start,
+                        onConfirm: controller.updateEnd,
+                        validator: (val) => controller.end.isAfterOrEqualTo(val!) ? null : '종료는 시작과 같거나 이 후 시점이여야 합니다.',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ),
       ),
-    );
+    ).whenComplete(() => Get.find<CalendarController>().resetBottomSheet());
   }
 }

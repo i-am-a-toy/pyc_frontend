@@ -64,4 +64,12 @@ extension DateTimeExtension on DateTime {
   DateTime getUtcDateOnly() {
     return DateTime.utc(year, month, day);
   }
+
+  String toYYYYMMDD() {
+    return DateFormat('yyyy-MM-dd').format(this);
+  }
+
+  String toYYMMDD() {
+    return DateFormat('yy-MM-dd').format(this);
+  }
 }

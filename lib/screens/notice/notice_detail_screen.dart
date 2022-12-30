@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/snackbar/snackbar.dart';
-import 'package:pyc/components/appbar/default_appbar.dart';
+import 'package:pyc/components/appbar/default_app_bar.dart';
 import 'package:pyc/components/button/default_text_button.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/components/seperator/default_divider.dart';

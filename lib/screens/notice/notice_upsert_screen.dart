@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
 import 'package:pyc/common/utils/validator/validator.dart';
-import 'package:pyc/components/appbar/default_appbar.dart';
+import 'package:pyc/components/appbar/default_app_bar.dart';
 import 'package:pyc/components/button/default_buttons.dart';
 import 'package:pyc/components/form/default_border_input_field.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
