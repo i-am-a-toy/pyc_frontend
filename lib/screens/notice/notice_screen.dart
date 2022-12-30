@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:pyc/common/constants/constants.dart';
-import 'package:pyc/components/appbar/default_appbar.dart';
+import 'package:pyc/components/appbar/default_app_bar.dart';
 import 'package:pyc/components/loading/loading_overlay.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/screens/notice/components/list/notice_list.dart';

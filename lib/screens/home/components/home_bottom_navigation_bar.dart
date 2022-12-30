@@ -24,7 +24,7 @@ class HomeBottomNavigationBar extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: ImageIcon(AssetImage('assets/icons/schedule.png')),
-            label: 'Schedule',
+            label: 'Calendar',
           ),
           BottomNavigationBarItem(
             icon: ImageIcon(AssetImage('assets/icons/mypage.png')),

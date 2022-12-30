@@ -67,7 +67,7 @@ class NoticeCommentList extends StatelessWidget {
                     child: DefaultAvatarContent(
                       title: comments[i].creator.name,
                       content: comments[i].comment,
-                      subContent: '\n\n${DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(comments[i].createdAt).toString()}',
+                      subContent: '\n\n${DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(comments[i].createdAt.add(const Duration(hours: 9))).toString()}',
                       avatarImage: comments[i].creator.image,
                     ),
                   ),

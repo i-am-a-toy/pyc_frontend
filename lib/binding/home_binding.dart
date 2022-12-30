@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
+import 'package:pyc/controllers/calendar/index_calendar_controller.dart';
 import 'package:pyc/controllers/home/home_controller.dart';
 import 'package:pyc/controllers/notice/notice_controller.dart';
 import 'package:pyc/controllers/user/fetch_me_controller.dart';
+import 'package:pyc/data/provider/calendar_provider.dart';
 import 'package:pyc/data/provider/notice_provider.dart';
 import 'package:pyc/data/provider/user_provider.dart';
+import 'package:pyc/data/repository/calendar_repository.dart';
 import 'package:pyc/data/repository/notice_repository.dart';
 import 'package:pyc/data/repository/user_repository.dart';
 
@@ -21,6 +24,11 @@ class HomeBinding extends Bindings {
         noticeProvider: NoticeProvider(),
       ),
     );
+    final calendarRepository = Get.put<CalendarRepository>(
+      CalendarRepository(
+        calendarProvider: CalendarProvider(),
+      ),
+    );
 
     //controller
     Get.put<FetchMeController>(
@@ -28,6 +36,9 @@ class HomeBinding extends Bindings {
     );
     Get.put(NoticeController(
       noticeRepository: noticeRepository,
+    ));
+    Get.put(IndexCalendarController(
+      repository: calendarRepository,
     ));
     Get.put(HomeController());
   }

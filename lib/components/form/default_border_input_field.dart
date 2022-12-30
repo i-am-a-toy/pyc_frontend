@@ -45,19 +45,19 @@ class DefaultBorderInputField extends StatelessWidget {
         isDense: true,
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
-          borderRadius: BorderRadius.circular(isRounded! ? 40 : 0),
+          borderRadius: BorderRadius.circular(isRounded! ? 40 : kDefaultValue / 2),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
-          borderRadius: BorderRadius.circular(isRounded! ? 40 : 0),
+          borderSide: const BorderSide(color: kTextGreyColor, width: 2.0),
+          borderRadius: BorderRadius.circular(isRounded! ? 40 : kDefaultValue / 2),
         ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.red, width: 2.0),
-          borderRadius: BorderRadius.circular(isRounded! ? 40 : 0),
+          borderRadius: BorderRadius.circular(isRounded! ? 40 : kDefaultValue / 2),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.red, width: 2.0),
-          borderRadius: BorderRadius.circular(isRounded! ? 40 : 0),
+          borderRadius: BorderRadius.circular(isRounded! ? 40 : kDefaultValue / 2),
         ),
       ),
     );

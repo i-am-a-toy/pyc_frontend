@@ -32,7 +32,7 @@ class NoticeContent extends StatelessWidget {
           DefaultAvatarContent(
             title: title,
             content: '작성자 | $name',
-            subContent: DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(createdAt.toLocal()).toString(),
+            subContent: DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(createdAt.add(const Duration(hours: 9))).toString(),
             avatarImage: image,
           ),
           kHeightSizeBox,
