@@ -94,7 +94,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               onTap: () => _showBottomSheetModal(data: e),
                               title: e.title,
                               content: e.content,
-                              subContent: e.isAllDay ? null : '\n${e.start.toYYMMDD()} ~ ${e.end.toYYMMDD()}',
+                              subContent: e.isAllDay ? '\n하루종일' : '\n${e.start.toHHmm()} ~ ${e.end.toHHmm()}',
                             ),
                           ),
                     ],
