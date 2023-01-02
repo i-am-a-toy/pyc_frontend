@@ -93,8 +93,8 @@ Widget? getTodayBuilder(
   return Container(
     width: kDefaultValue * 1.5,
     alignment: Alignment.center,
-    decoration: const BoxDecoration(
-      color: kPointColor,
+    decoration: BoxDecoration(
+      color: Colors.amber.shade700,
       shape: BoxShape.circle,
     ),
     child: Text(
