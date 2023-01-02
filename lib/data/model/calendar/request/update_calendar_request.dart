@@ -15,12 +15,20 @@ class UpdateCalendarRequest {
     this._isAllDay,
   );
 
+  /// toJson
+  ///
+  /// Request를 보낼 때 UTC로 변경하여 Server로 요청을 보낸다.
+  /// Server에서는 FE에서 요청이 온 날짜 데이터에 -9를 하여 저장을 하게 된다.
   Map<String, dynamic> toJson() {
     return {
       'title': _title.replaceAll('\n', ' '),
       'content': _content.trim(),
-      'start': _isAllDay ? _start.dateOnly().toUtc().toIso8601String() : _start.toUtc().toIso8601String(),
-      'end': _isAllDay ? _end.dateOnly().toUtc().toIso8601String() : _end.toUtc().toIso8601String(),
+      'start': _isAllDay
+          ? _start.getUtcDateOnly().subtract(const Duration(hours: 9)).toIso8601String()
+          : _start.subtract(const Duration(hours: 9)).toIso8601String(),
+      'end': _isAllDay
+          ? _end.getUtcDateOnly().subtract(const Duration(hours: 9)).toIso8601String()
+          : _end.subtract(const Duration(hours: 9)).toIso8601String(),
       'isAllDay': _isAllDay,
     };
   }
