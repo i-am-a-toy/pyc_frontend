@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pyc/controllers/home/home_controller.dart';
 import 'package:pyc/screens/calendar/calendar_screen.dart';
+import 'package:pyc/screens/group/group_screen.dart';
+import 'package:pyc/screens/group/group_upsert_screen.dart';
 import 'package:pyc/screens/home/components/home_bottom_navigation_bar.dart';
 import 'package:pyc/screens/index/index_screen.dart';
 
@@ -13,7 +15,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     const bodies = [
       IndexScreen(),
-      Text('Manager'),
+      // GroupUpsertScreen(),
+      GroupScreen(child: Text('123')),
       CalendarScreen(),
       Text('MyPage'),
     ];

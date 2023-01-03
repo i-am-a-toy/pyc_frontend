@@ -24,16 +24,17 @@ class DefaultAvatarContent extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CircleAvatar(
-          maxRadius: 24.0,
-          backgroundColor: kPrimaryColor,
-          backgroundImage: avatarChild != null
-              ? null
-              : avatarImage != null
-                  ? NetworkImage(avatarImage!)
-                  : kDefaultUserImage,
-          child: avatarChild,
-        ),
+        if (avatarChild != null || avatarImage != null)
+          CircleAvatar(
+            maxRadius: 24.0,
+            backgroundColor: kPrimaryColor,
+            backgroundImage: avatarChild != null
+                ? null
+                : avatarImage != null
+                    ? NetworkImage(avatarImage!)
+                    : kDefaultUserImage,
+            child: avatarChild,
+          ),
         kHalfWidthSizedBox,
         Expanded(
           child: Column(

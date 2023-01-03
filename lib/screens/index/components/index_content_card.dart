@@ -4,7 +4,7 @@ import 'package:pyc/components/content/default_avatar_content.dart';
 
 class IndexContentCard extends StatelessWidget {
   final double? height;
-  final Widget avatarChild;
+  final Widget? avatarChild;
   final String title;
   final String content;
   final String? subContent;
@@ -13,7 +13,7 @@ class IndexContentCard extends StatelessWidget {
   const IndexContentCard({
     Key? key,
     this.height = 80.0,
-    required this.avatarChild,
+    this.avatarChild,
     required this.title,
     required this.content,
     this.subContent,
